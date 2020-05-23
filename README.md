@@ -17,5 +17,3 @@ An in-vehicle infotainment system is a combination of systems that deliver enter
 - Multi-standard radio reception  
 - Multimedia support  
 
-
-To check the project Github repository: [Infotainment System](https://github.com/alzahraaelsallakh/Infotainment-System-Yocto)
