@@ -3,4 +3,4 @@
 	url = https://github.com/agherzan/meta-raspberrypi.git
 [submodule "yocto/poky"]
 	path = yocto/poky
-	url = git://git.yoctoproject.org/poky
+	url = https://git.yoctoproject.org/git/poky
