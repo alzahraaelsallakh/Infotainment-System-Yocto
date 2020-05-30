@@ -9,13 +9,6 @@ An in-vehicle infotainment system is a combination of systems that deliver enter
   <img width="700" height="346" src="../media/info-sys-demo.jpg">
 </p>
 
-## Technologies to be implemented
-- Touch screen  
-- Smartphone pairing  
-- Multi-standard radio reception  
-- Multimedia support  
-
-
 ---
 # Getting Started
 
