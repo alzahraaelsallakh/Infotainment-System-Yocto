@@ -12,7 +12,7 @@ An in-vehicle infotainment system is a combination of systems that deliver enter
 ---
 # Getting Started
 
-## Building the System using Yocto
+## Building the Image using Yocto
 
 1. Download the Poky build system then checkout to zeus branch  
 ```
@@ -54,8 +54,18 @@ BBLAYERS ?= " \
 ```
 LICENSE_FLAGS_WHITELIST_append = " commercial_faad2 commercial_gstreamer1.0-plugins-ugly "
 ```  
-8. Build the poky image using the build engine **BitBake**
+8. Build the poky image using the build engine **BitBake**  
+It may take 3-4 hours to finish the build process
 ```
 $ bitbake core-image-sato
 ```  
-Note: core-image-sato is selected as it supports X11 and a GUI server is required
+**core-image-sato** is selected as it supports X11 and a GUI server is required  
+
+9. If the build process was successful, the raspberry pi image will be under ```rpi-build/tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.rpi-sdimg```  
+
+10. Flash the image on the SD card and make sure that it's formatted as free space  
+my SD card is /dev/mmcblk0  
+```
+$ sudo dd if=tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.rpi-sdimg of=/dev/mmcblk0 status=progress conv=fsync bs=4M
+```
+11. After the image is ready, connect to RPI through Ethernet, TTL or HDMI 
