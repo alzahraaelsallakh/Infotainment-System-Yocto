@@ -68,4 +68,4 @@ my SD card is /dev/mmcblk0
 ```
 $ sudo dd if=tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.rpi-sdimg of=/dev/mmcblk0 status=progress conv=fsync bs=4M
 ```
-11. After the image is ready, connect to RPI through Ethernet, TTL or HDMI 
+11. After the image is ready, connect to RPI through TTL or HDMI 
