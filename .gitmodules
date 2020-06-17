@@ -4,3 +4,6 @@
 [submodule "yocto/poky"]
 	path = yocto/poky
 	url = https://git.yoctoproject.org/git/poky
+[submodule "yocto/meta-qt5"]
+	path = yocto/meta-qt5
+	url = https://github.com/meta-qt5/meta-qt5
