@@ -14,20 +14,17 @@ An in-vehicle infotainment system is a combination of systems that deliver enter
 
 ## Building the Image using Yocto
 
-1. Download the Poky build system then checkout to zeus branch  
+1. Download the Poky build system (zeus branch)  
 ```
-$ git clone git://git.yoctoproject.org/poky
-$ git checkout zeus
+$ git clone -b zeus git://git.yoctoproject.org/poky
 ``` 
-2. Download RPI BSP then checkout to zeus branch 
+2. Download RPI BSP (zeus branch) 
 ```
-$ git clone https://github.com/agherzan/meta-raspberrypi.git 
-$ git checkout zeus
+$ git clone -b zeus https://github.com/agherzan/meta-raspberrypi.git 
 ``` 
-3. Download openembedded then checkout to zeus branch
+3. Download openembedded (zeus branch)
 ```
-$ git clone https://github.com/openembedded/meta-openembedded.git
-$ git checkout zeus
+$ git clone -b zeus https://github.com/openembedded/meta-openembedded.git
 ```
 Note: for my steps, both poky, meta-raspberrypi and meta-openembedded repos are in the same path   
   
@@ -82,3 +79,21 @@ IMAGE_INSTALL_append = " \
 ```
 $ bitbake core-image-sato
 ```  
+
+## Adding Qt 
+
+1. Download the qt5 layer (zeus branch)  
+```
+$ git clone -b zeus https://github.com/meta-qt5/meta-qt5
+``` 
+2. Edit rpi-build/bblayers.conf and add the layer to BBLAYERS variable  
+```
+BBLAYERS ?= " \
+....
+/ABSOLUTE/PATH/meta-qt5 \
+"
+```  
+3. Rebuild the image  
+```
+$ bitbake core-image-sato
+``` 
