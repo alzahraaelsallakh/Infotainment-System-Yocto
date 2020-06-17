@@ -69,3 +69,16 @@ my SD card is /dev/mmcblk0
 $ sudo dd if=tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.rpi-sdimg of=/dev/mmcblk0 status=progress conv=fsync bs=4M
 ```
 11. After the image is ready, connect to RPI through TTL or HDMI 
+
+
+## Adding VNC server
+
+1. Edit rpi-build/local.conf and add x11vnc to  IMAGE_INSTALL_append variable  
+```
+IMAGE_INSTALL_append = " \
+	x11vnc"
+```  
+2. Rebuild the image   
+```
+$ bitbake core-image-sato
+```  
