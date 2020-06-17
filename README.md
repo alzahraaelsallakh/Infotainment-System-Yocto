@@ -51,33 +51,13 @@ BBLAYERS ?= " \
 ```
 LICENSE_FLAGS_WHITELIST_append = " commercial_faad2 commercial_gstreamer1.0-plugins-ugly "
 ```  
-8. Build the poky image using the build engine **BitBake**  
-It may take 3-4 hours to finish the build process
-```
-$ bitbake core-image-sato
-```  
-**core-image-sato** is selected as it supports X11 and a GUI server is required  
-
-9. If the build process was successful, the raspberry pi image will be under ```rpi-build/tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.rpi-sdimg```  
-
-10. Flash the image on the SD card and make sure that it's formatted as free space  
-my SD card is /dev/mmcblk0  
-```
-$ sudo dd if=tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.rpi-sdimg of=/dev/mmcblk0 status=progress conv=fsync bs=4M
-```
-11. After the image is ready, connect to RPI through TTL or HDMI 
-
 
 ## Adding VNC server
 
-1. Edit rpi-build/local.conf and add x11vnc to  IMAGE_INSTALL_append variable  
+Edit rpi-build/local.conf and add x11vnc to  IMAGE_INSTALL_append variable  
 ```
 IMAGE_INSTALL_append = " \
 	x11vnc"
-```  
-2. Rebuild the image   
-```
-$ bitbake core-image-sato
 ```  
 
 ## Adding Qt 
@@ -93,7 +73,51 @@ BBLAYERS ?= " \
 /ABSOLUTE/PATH/meta-qt5 \
 "
 ```  
-3. Rebuild the image  
+
+## Baking and flashing the image 
+
+1. Build the image using the build engine **BitBake**  
+It may take many hours to finish the build process
 ```
 $ bitbake core-image-sato
-``` 
+```  
+**core-image-sato** is selected as it supports X11 and a GUI server is required  
+
+2. If the build process was successful, the raspberry pi image will be under ```rpi-build/tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.rpi-sdimg```  
+
+3. Flash the image on the SD card and make sure that it's formatted as free space  
+my SD card is /dev/mmcblk0  
+```
+$ sudo dd if=tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.rpi-sdimg of=/dev/mmcblk0 status=progress conv=fsync bs=4M
+```
+4. After the image is ready, connect RPI with HDMI having the next interface  
+<p align="center">
+  <img  src="../media/desktop.png">
+</p>
+
+
+## Configuring network settings (Wifi)  
+
+1. Edit /etc/wpa_supplicant.conf file to input WiFi access point related information  
+```
+network={
+	ssid="NETWORK_NAME"
+	psk="NETWORK_PASSWORD"
+}
+```  
+2. Edit /etc/network/interfaces to set the RPI static IP address and wifi gateway address   
+```
+auto wlan0
+
+allow-hotplug wlan0
+iface wlan0 inet static
+	address 192.168.1.2  
+	netmask 255.255.255.0  
+	gateway 192.168.1.1  
+	wpa-conf /etc/wpa_supplicant.conf  
+iface default inet dhcp
+```  
+3. Edit /etc/profile to start x11vnc server at booting time  
+```
+x11vnc &
+```
