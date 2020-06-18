@@ -73,6 +73,18 @@ BBLAYERS ?= " \
 /ABSOLUTE/PATH/meta-qt5 \
 "
 ```  
+3. Install generic SDK tool chain    
+```
+$ bitbake meta-toolchain
+$ cd tmp/deploy/sdk
+$ ./poky-glibc-x86_64-meta-toolchain-aarch64-raspberrypi3-64-toolchain-3.0.2.sh poky-glibc-x86_64-meta-toolchain-aarch64-raspberrypi3-64-toolchain-3.0.2.sh
+```
+4. Install Qt5 tool chain for cross compilation  
+```
+$ bitbake meta-toolchain-qt5  
+$ cd tmp/deploy/sdk
+$
+```
 
 ## Baking and flashing the image 
 
@@ -82,6 +94,7 @@ It may take many hours to finish the build process
 $ bitbake core-image-sato
 ```  
 **core-image-sato** is selected as it supports X11 and a GUI server is required  
+Note: The halt function in sato image seems as it has bug, rebooting/restarting or shutting down interrupts the image every time. Temporary solution is to cut the power off (still under work)  
 
 2. If the build process was successful, the raspberry pi image will be under ```rpi-build/tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.rpi-sdimg```  
 
