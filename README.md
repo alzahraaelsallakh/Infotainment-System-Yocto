@@ -78,12 +78,14 @@ BBLAYERS ?= " \
 $ bitbake meta-toolchain
 $ cd tmp/deploy/sdk
 $ ./poky-glibc-x86_64-meta-toolchain-aarch64-raspberrypi3-64-toolchain-3.0.2.sh poky-glibc-x86_64-meta-toolchain-aarch64-raspberrypi3-64-toolchain-3.0.2.sh
+$ source /opt/poky/3.0.2/environment-setup-aarch64-poky-linux
 ```
 4. Install Qt5 tool chain for cross compilation  
 ```
 $ bitbake meta-toolchain-qt5  
 $ cd tmp/deploy/sdk
-$
+$ ./poky-glibc-x86_64-meta-toolchain-qt5-aarch64-raspberrypi3-64-toolchain-3.0.2.sh 
+$ source yes/environment-setup-aarch64-poky-linux
 ```
 
 ## Baking and flashing the image 
