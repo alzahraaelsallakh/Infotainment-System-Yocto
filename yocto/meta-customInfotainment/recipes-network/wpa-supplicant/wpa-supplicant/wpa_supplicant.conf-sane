@@ -1,0 +1,16 @@
+ctrl_interface=/var/run/wpa_supplicant
+ctrl_interface_group=0
+update_config=1
+
+network={
+	ssid="Abdallah"
+	psk="ABC12345"
+	proto=RSN
+	key_mgmt=WPA-PSK
+	pairwise=CCMP
+	auth_alg=OPEN
+}
+
+network={
+        key_mgmt=NONE
+}
