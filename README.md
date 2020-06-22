@@ -8,10 +8,27 @@ An in-vehicle infotainment system is a combination of systems that deliver enter
 <p align="center">
   <img width="700" height="346" src="../media/info-sys-demo.jpg">
 </p>
+ 
+ 
+## Table of Contents
+1. [ Getting Started ](#gettingStarted)
+	1. [ Building the Image using Yocto ](#buildingYocto)  
+	2. [ Adding VNC server ](#addingVNC)  
+	3. [ Adding Qt ](#addingQt)  
+	4. [ Baking and flashing the image ](#baking)  
+	5. [ Configuring network settings ](#networkSettings)
+2. [ Creating UI  ](#creatingUI)  
+	1. [ Setting up environment ](#settingEnv)  
+	2. [ tarting with Qt Creator ](#qtCreator)  
+	3. [ Developing Main Screen ](#qtMainScreen)
 
+
+ 
 ---
+<a name="gettingStarted"></a>
 # Getting Started
 
+<a name="buildingYocto"></a>
 ## Building the Image using Yocto
 
 1. Download the Poky build system (zeus branch)  
@@ -51,7 +68,7 @@ BBLAYERS ?= " \
 ```
 LICENSE_FLAGS_WHITELIST_append = " commercial_faad2 commercial_gstreamer1.0-plugins-ugly "
 ```  
-
+<a name="addingVNC"></a>
 ## Adding VNC server
 
 Edit rpi-build/local.conf and add x11vnc to  IMAGE_INSTALL_append variable  
@@ -59,7 +76,7 @@ Edit rpi-build/local.conf and add x11vnc to  IMAGE_INSTALL_append variable
 IMAGE_INSTALL_append = " \
 	x11vnc"
 ```  
-
+<a name="addingQt"></a>
 ## Adding Qt 
 
 1. Download the qt5 layer (zeus branch)  
@@ -87,7 +104,7 @@ $ cd tmp/deploy/sdk
 $ ./poky-glibc-x86_64-meta-toolchain-qt5-aarch64-raspberrypi3-64-toolchain-3.0.2.sh 
 $ source yes/environment-setup-aarch64-poky-linux
 ```
-
+<a name="baking"></a>
 ## Baking and flashing the image 
 
 1. Build the image using the build engine **BitBake**  
@@ -110,7 +127,7 @@ $ sudo dd if=tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.r
   <img  src="../media/desktop.png">
 </p>
 
-
+<a name="networkSettings"></a>
 ## Configuring network settings (Wifi)  
 
 1. Edit /etc/wpa_supplicant.conf file to input WiFi access point related information  
@@ -138,8 +155,10 @@ x11vnc &
 ```
 
 ---
+<a name="creatingUI"></a>
 # Creating UI  
 
+<a name="settingEnv"></a>
 ## Setting up environment
 
 1. Install PySide, following [PySide](https://pypi.org/project/PySide/) steps maybe helpful. Python-pip and qt5-default are required, you may need to install them first  
@@ -157,6 +176,7 @@ $ sudo apt install pyside-tools
 ```  
 3. Install Qt5 Creator/Designer from [Get Qt](https://www.qt.io/download)  
 
+<a name="qtCreator"></a>
 ## Starting with Qt Creator
 1. Create new project with Qt Creator -> **Application (Qt for Python -> Empty)**   
 This will create 2 files (main.pyproject, main.py)
@@ -177,7 +197,8 @@ This will create 2 files (main.pyproject, main.py)
   <img  width="700" height="500" src="../media/Qt8.png">
 </p>
 
-## Qt for Python  
+<a name="qtMainScreen"></a>
+## Developing Main Screen  
 
 1. Convert your UI file to python file 
 ```
