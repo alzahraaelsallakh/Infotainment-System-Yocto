@@ -179,7 +179,7 @@ This will create 2 files (main.pyproject, main.py)
 
 ## Qt for Python  
 
-1. Convert your UI file to python file  
+1. Convert your UI file to python file 
 ```
 $ pyside-uic mainScreen.ui -o mainScreenUi.py
 ```
@@ -187,7 +187,7 @@ $ pyside-uic mainScreen.ui -o mainScreenUi.py
 ```
 $ pyside-rcc icons.qrc -o icons_rc.py
 ```  
-3. Import the python files in your main.py file  
+3. Add the python files to your project then import them in your main.py file  
 ```
 #importing Qt GUI files
 import mainScreenUi
@@ -197,4 +197,7 @@ import background_rc
 import icons_rc
 ```
 4. Create new classes/execute the Qt appliaction in your main.py  
-5. Build and Run  
+5. Build and Run, This is the main screen demo 
+<p align="center">
+  <img src="../media/mainScreenGui.gif">
+</p>
