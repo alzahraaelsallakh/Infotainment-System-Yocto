@@ -136,3 +136,68 @@ iface default inet dhcp
 ```
 x11vnc &
 ```
+
+---
+# Creating UI  
+
+## Setting up environment
+
+1. Install PySide, following [PySide](https://pypi.org/project/PySide/) steps maybe helpful. Python-pip and qt5-default are required, you may need to install them first  
+```
+$ sudo apt install python-pip
+$ sudo apt-get install qt5-default
+$ sudo pip install wheel
+$ pip install PySide
+```
+You may face problems due to your OS version, your pip wheel... etc.  
+
+2. Install PySide tools for Qt integration  
+```
+$ sudo apt install pyside-tools
+```  
+3. Install Qt5 Creator/Designer from [Get Qt](https://www.qt.io/download)  
+
+## Starting with Qt Creator
+1. Create new project with Qt Creator -> **Application (Qt for Python -> Empty)**   
+This will create 2 files (main.pyproject, main.py)
+<p align="center">
+  <img  width="700" height="500" src="../media/Qt2.png">
+</p>
+
+2. Right click on the project to add new **Qt Designer Form**, to design from scratch select the **Widget** template
+<p align="center">
+  <img  width="700" height="500" src="../media/Qt5.png">
+</p>    
+
+3. To add images and any resources, right click on the project to add new **Qt Resource File** then add prefix and files you need  
+<p align="center">
+  <img   width="700" height="500" src="../media/Qt7.png">
+</p>
+<p align="center">
+  <img  width="700" height="500" src="../media/Qt8.png">
+</p>
+
+## Qt for Python  
+
+1. Convert your UI file to python file 
+```
+$ pyside-uic mainScreen.ui -o mainScreenUi.py
+```
+2. Convert your resource file to python file  
+```
+$ pyside-rcc icons.qrc -o icons_rc.py
+```  
+3. Add the python files to your project then import them in your main.py file  
+```
+#importing Qt GUI files
+import mainScreenUi
+
+#importing Qt resources files
+import background_rc
+import icons_rc
+```
+4. Create new classes/execute the Qt appliaction in your main.py  
+5. Build and Run, This is the main screen demo 
+<p align="center">
+  <img src="../media/mainScreenGui.gif">
+</p>
