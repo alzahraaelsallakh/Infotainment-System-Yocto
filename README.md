@@ -145,7 +145,8 @@ $ echo 'FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"' >  init-ifupdown_%.bbapp
   Copy the original profile file then add this line to the end of the file   
 ```
 x11vnc &
-```
+```  
+**Note:** To know the recipe holding the file, after sourcing run ``` $ oe-pkgdata-util find-path /etc/profile ```  The output will look like ```base-files: /etc/profile ```
 
 <a name="addingVNC"></a>
 ## Adding VNC server
