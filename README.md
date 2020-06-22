@@ -19,7 +19,7 @@ An in-vehicle infotainment system is a combination of systems that deliver enter
 	5. [ Configuring network settings ](#networkSettings)
 2. [ Creating UI  ](#creatingUI)  
 	1. [ Setting up environment ](#settingEnv)  
-	2. [ tarting with Qt Creator ](#qtCreator)  
+	2. [ Starting with Qt Creator ](#qtCreator)  
 	3. [ Developing Main Screen ](#qtMainScreen)
 
 
