@@ -1,0 +1,3 @@
+{
+    "files": ["mainScreen.ui","media/gps_icon.png","icons.qrc","icons_rc.py","background_rc.py","main.py","media/bluetooth_icon.png","mainScreenUi.py","background.qrc","icons_rc.py"]
+}

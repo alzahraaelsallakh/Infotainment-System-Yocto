@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/mainIcons">
+        <file>media/calls_icon.png</file>
+        <file>media/fm_icon.png</file>
+        <file>media/settings_icon.png</file>
+        <file>media/music_icon.png</file>
+        <file>media/gps_icon.png</file>
+        <file>media/bluetooth_icon.png</file>
+        <file>media/home_icon.png</file>
+    </qresource>
+</RCC>
