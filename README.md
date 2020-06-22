@@ -102,7 +102,7 @@ recipes-network
         └── wpa-supplicant_%.bbappend
 
 ```
-4. To add input wifi access point: /etc/wpa_supplicant.conf file is required, which is found in wpa-supplicant recipe  
+4. To add input wifi access point: /etc/wpa_supplicant.conf file is required, which is produced by wpa-supplicant recipe  
 ``` 
 $ echo 'FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"' >  wpa-supplicant_%.bbappend  
 ```
@@ -121,7 +121,7 @@ network={
         key_mgmt=NONE
 }
 ```
-5. To enable wifi and set static ip address: /etc/network/interfaces file is required, which is found in init-ifupdown recipe  
+5. To enable wifi and set static ip address: /etc/network/interfaces file is required, which is produced by init-ifupdown recipe  
 ``` 
 $ echo 'FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"' >  init-ifupdown_%.bbappend  
 ```
@@ -138,7 +138,7 @@ iface wlan0 inet static
 	wpa-conf /etc/wpa_supplicant.conf  
 iface default inet dhcp
 ```
-6. To enable x11vnc server at bootin time: /etc/profile file is required, which is found in base-files recipe  
+6. To enable x11vnc server at bootin time: /etc/profile file is required, which is produced by base-files recipe  
 ``` 
 $ echo 'FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"' >  init-ifupdown_%.bbappend  
 ```
@@ -146,7 +146,7 @@ $ echo 'FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"' >  init-ifupdown_%.bbapp
 ```
 x11vnc &
 ```  
-**Note:** To know the recipe holding the file, after sourcing run ``` $ oe-pkgdata-util find-path /etc/profile ```  The output will look like ```base-files: /etc/profile ```
+**Note:** To know the recipe producing the path, after sourcing run ``` $ oe-pkgdata-util find-path /etc/profile ```  The output will look like ```base-files: /etc/profile ```
 
 <a name="addingVNC"></a>
 ## Adding VNC server
