@@ -23,7 +23,9 @@ An in-vehicle infotainment system is a combination of systems that deliver enter
 	2. [ Starting with Qt Creator ](#qtCreator)  
 	3. [ Developing main screen ](#qtMainScreen)
 
-
+## Hardware  
+**Host machine:** Ubuntu 18.04.4 LTS   
+**Target machine:** Raspberry Pi 3B+  
  
 ---
 <a name="gettingStarted"></a>
