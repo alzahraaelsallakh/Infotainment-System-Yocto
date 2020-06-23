@@ -22,6 +22,8 @@ An in-vehicle infotainment system is a combination of systems that deliver enter
 	1. [ Setting up environment ](#settingEnv)  
 	2. [ Starting with Qt Creator ](#qtCreator)  
 	3. [ Developing main screen ](#qtMainScreen)
+3. [ MP3 player](#mp3Player)  
+	1. [ Enabling sound in Yocto ](#enableSound)
 
 ## Hardware  
 **Host machine:** Ubuntu 18.04.4 LTS   
@@ -284,3 +286,23 @@ import icons_rc
 <p align="center">
   <img src="../media/mainScreenGui.gif">
 </p>
+
+
+---
+<a name="mp3Player"></a>
+# MP3 player  
+
+<a name="enableSound"></a>
+## Enabling sound in Yocto  
+
+1. Edit rpi-build/local.conf and add the following  
+```
+IMAGE_INSTALL_append = " gstreamer1.0-plugins-good gstreamer1.0-plugins-base gstreamer1.0-plugins-ugly"
+LICENSE_FLAGS_WHITELIST_append = " commercial commercial_mpg123 commercial_gstreamer1.0-plugins-ugly "
+
+PACKAGECONFIG_append_pn-qtmultimedia = " gstreamer alsa"  
+```  
+2. To run any mp3 file  
+```
+$ gst-play-1.0 song.mp3
+```
