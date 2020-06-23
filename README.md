@@ -11,25 +11,30 @@ An in-vehicle infotainment system is a combination of systems that deliver enter
  
  
 ## Table of Contents
-1. [ Getting Started ](#gettingStarted)
-	1. [ Building the Image using Yocto ](#buildingYocto)  
-	2. [ Adding VNC server ](#addingVNC)  
-	3. [ Adding Qt ](#addingQt)  
-	4. [ Baking and flashing the image ](#baking)  
-	5. [ Configuring network settings ](#networkSettings)
+1. [ Building the image using Yocto ](#gettingStarted)
+	1. [ Setting up environment ](#settingEnvYocto)  
+	2. [ Configuring network settings ](#networkSettings)
+	3. [ Adding VNC server ](#addingVNC)  
+	4. [ Adding Qt ](#addingQt)       
+	5. [ Baking and flashing the image ](#baking) 
+	6. [ Known issues ](#knownIssues)
 2. [ Creating UI  ](#creatingUI)  
 	1. [ Setting up environment ](#settingEnv)  
 	2. [ Starting with Qt Creator ](#qtCreator)  
-	3. [ Developing Main Screen ](#qtMainScreen)
+	3. [ Developing main screen ](#qtMainScreen)
+3. [ MP3 player](#mp3Player)  
+	1. [ Enabling sound in Yocto ](#enableSound)
 
-
+## Hardware  
+**Host machine:** Ubuntu 18.04.4 LTS   
+**Target machine:** Raspberry Pi 3B+  
  
 ---
 <a name="gettingStarted"></a>
-# Getting Started
+# Building the image using Yocto
 
-<a name="buildingYocto"></a>
-## Building the Image using Yocto
+<a name="settingEnvYocto"></a>
+## Setting up environment
 
 1. Download the Poky build system (zeus branch)  
 ```
@@ -68,6 +73,85 @@ BBLAYERS ?= " \
 ```
 LICENSE_FLAGS_WHITELIST_append = " commercial_faad2 commercial_gstreamer1.0-plugins-ugly "
 ```  
+
+<a name="networkSettings"></a>
+## Configuring network settings (Wifi)  
+
+1. Create new custom layer ``` $ bitbake-layers create-layer meta-customInfotainment ``` 
+2. Add the layer to BBLAYERS variable as previuos  
+3. Create new folder for network configuration recipes, **recipes-network** will hold overlaying network files (.bbappend files)  
+```
+$ cd meta-customInfotainment/recipes-network
+```  
+The tree should be as following  
+```
+recipes-network
+    ├── base-files
+    │   ├── base-files
+    │   │   └── profile
+    │   └── base-files_%.bbappend
+    ├── init-ifupdown
+    │   ├── init-ifupdown
+    │   │   └── interfaces
+    │   └── init-ifupdown_%.bbappend
+    └── wpa-supplicant
+        ├── wpa-supplicant
+        │   ├── 0001-AP-Silently-ignore-management-frame-from-unexpected-.patch
+        │   ├── 0001-replace-systemd-install-Alias-with-WantedBy.patch
+        │   ├── 99_wpa_supplicant
+        │   ├── defconfig
+        │   ├── wpa_supplicant.conf
+        │   ├── wpa_supplicant.conf-sane
+        │   └── wpa-supplicant.sh
+        └── wpa-supplicant_%.bbappend
+
+```
+4. To add input wifi access point: /etc/wpa_supplicant.conf file is required, which is produced by wpa-supplicant recipe  
+``` 
+$ echo 'FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"' >  wpa-supplicant_%.bbappend  
+```
+  Copy the original wpa_supplicant.conf-sane file then add your modifications. It should be as following  
+```
+ctrl_interface=/var/run/wpa_supplicant
+ctrl_interface_group=0
+update_config=1
+
+network={
+	ssid="NETWORK_NAME"
+	psk="NETWORK_PASSWORD"
+}
+
+network={
+        key_mgmt=NONE
+}
+```
+5. To enable wifi and set static ip address: /etc/network/interfaces file is required, which is produced by init-ifupdown recipe  
+``` 
+$ echo 'FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"' >  init-ifupdown_%.bbappend  
+```
+  Copy the original interfaces file then add your modifications. It should be as following  
+```
+# Wireless interfaces
+auto wlan0
+
+allow-hotplug wlan0
+iface wlan0 inet static
+	address 192.168.1.2  
+	netmask 255.255.255.0  
+	gateway 192.168.1.1  
+	wpa-conf /etc/wpa_supplicant.conf  
+iface default inet dhcp
+```
+6. To enable x11vnc server at bootin time: /etc/profile file is required, which is produced by base-files recipe  
+``` 
+$ echo 'FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"' >  init-ifupdown_%.bbappend  
+```
+  Copy the original profile file then add this line to the end of the file   
+```
+x11vnc &
+```  
+**Note:** To know the recipe producing the path, after sourcing run ``` $ oe-pkgdata-util find-path /etc/profile ```  The output will look like ```base-files: /etc/profile ```
+
 <a name="addingVNC"></a>
 ## Adding VNC server
 
@@ -104,6 +188,7 @@ $ cd tmp/deploy/sdk
 $ ./poky-glibc-x86_64-meta-toolchain-qt5-aarch64-raspberrypi3-64-toolchain-3.0.2.sh 
 $ source yes/environment-setup-aarch64-poky-linux
 ```
+
 <a name="baking"></a>
 ## Baking and flashing the image 
 
@@ -112,10 +197,9 @@ It may take many hours to finish the build process
 ```
 $ bitbake core-image-sato
 ```  
-**core-image-sato** is selected as it supports X11 and a GUI server is required  
-Note: The halt function in sato image seems as it has bug, rebooting/restarting or shutting down interrupts the image every time. Temporary solution is to cut the power off (still under work)  
+**core-image-sato** is selected as it supports X11 and a GUI server is required   
 
-2. If the build process was successful, the raspberry pi image will be under ```rpi-build/tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.rpi-sdimg```  
+2. If the build process was successful, the raspberry pi image will be under ```rpi-build/tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.rpi-sdimg```   
 
 3. Flash the image on the SD card and make sure that it's formatted as free space  
 my SD card is /dev/mmcblk0  
@@ -127,32 +211,12 @@ $ sudo dd if=tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.r
   <img  src="../media/desktop.png">
 </p>
 
-<a name="networkSettings"></a>
-## Configuring network settings (Wifi)  
 
-1. Edit /etc/wpa_supplicant.conf file to input WiFi access point related information  
-```
-network={
-	ssid="NETWORK_NAME"
-	psk="NETWORK_PASSWORD"
-}
-```  
-2. Edit /etc/network/interfaces to set the RPI static IP address and wifi gateway address   
-```
-auto wlan0
+<a name="knownIssues"></a>
+## Known issues
 
-allow-hotplug wlan0
-iface wlan0 inet static
-	address 192.168.1.2  
-	netmask 255.255.255.0  
-	gateway 192.168.1.1  
-	wpa-conf /etc/wpa_supplicant.conf  
-iface default inet dhcp
-```  
-3. Edit /etc/profile to start x11vnc server at booting time  
-```
-x11vnc &
-```
+**Issue:** The halt function in core-image-sato has a bug, where any restart/shutdown/reboot operation interrupts the image every time  
+**Workaround:** Cut the power off temporarly each time 
 
 ---
 <a name="creatingUI"></a>
@@ -198,7 +262,7 @@ This will create 2 files (main.pyproject, main.py)
 </p>
 
 <a name="qtMainScreen"></a>
-## Developing Main Screen  
+## Developing main screen  
 
 1. Convert your UI file to python file 
 ```
@@ -222,3 +286,23 @@ import icons_rc
 <p align="center">
   <img src="../media/mainScreenGui.gif">
 </p>
+
+
+---
+<a name="mp3Player"></a>
+# MP3 player  
+
+<a name="enableSound"></a>
+## Enabling sound in Yocto  
+
+1. Edit rpi-build/local.conf and add the following  
+```
+IMAGE_INSTALL_append = " gstreamer1.0-plugins-good gstreamer1.0-plugins-base gstreamer1.0-plugins-ugly"
+LICENSE_FLAGS_WHITELIST_append = " commercial commercial_mpg123 commercial_gstreamer1.0-plugins-ugly "
+
+PACKAGECONFIG_append_pn-qtmultimedia = " gstreamer alsa"  
+```  
+2. To run any mp3 file  
+```
+$ gst-play-1.0 song.mp3
+```
