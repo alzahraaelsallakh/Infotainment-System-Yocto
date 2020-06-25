@@ -15,15 +15,16 @@ An in-vehicle infotainment system is a combination of systems that deliver enter
 	1. [ Setting up environment ](#settingEnvYocto)  
 	2. [ Configuring network settings ](#networkSettings)
 	3. [ Adding VNC server ](#addingVNC)  
-	4. [ Adding Qt ](#addingQt)       
-	5. [ Baking and flashing the image ](#baking) 
-	6. [ Known issues ](#knownIssues)
+	4. [ Adding Qt ](#addingQt)  
+	5. [ Installing PySide for Qt ](#enablePySide)
+	6. [ Enabling sound ](#enableSound)
+	7. [ Baking and flashing the image ](#baking) 
+	8. [ Known issues ](#knownIssues)
 2. [ Creating UI  ](#creatingUI)  
 	1. [ Setting up environment ](#settingEnv)  
 	2. [ Starting with Qt Creator ](#qtCreator)  
 	3. [ Developing main screen ](#qtMainScreen)
 3. [ MP3 player](#mp3Player)  
-	1. [ Enabling sound in Yocto ](#enableSound)
 
 ## Hardware  
 **Host machine:** Ubuntu 18.04.4 LTS   
@@ -173,21 +174,42 @@ BBLAYERS ?= " \
 ....
 /ABSOLUTE/PATH/meta-qt5 \
 "
+``` 
+3.  Edit rpi-build/local.conf and add 
+``` 
+IMAGE_INSTALL_append = " make cmake"
+IMAGE_INSTALL_append = " qtbase qtdeclarative qtimageformats qtmultimedia qtquickcontrols2 qtquickcontrols "
 ```  
-3. Install generic SDK tool chain    
+4. Install generic SDK tool chain    
 ```
 $ bitbake meta-toolchain
 $ cd tmp/deploy/sdk
 $ ./poky-glibc-x86_64-meta-toolchain-aarch64-raspberrypi3-64-toolchain-3.0.2.sh poky-glibc-x86_64-meta-toolchain-aarch64-raspberrypi3-64-toolchain-3.0.2.sh
 $ source /opt/poky/3.0.2/environment-setup-aarch64-poky-linux
 ```
-4. Install Qt5 tool chain for cross compilation  
+5. Install Qt5 tool chain for cross compilation  
 ```
 $ bitbake meta-toolchain-qt5  
 $ cd tmp/deploy/sdk
 $ ./poky-glibc-x86_64-meta-toolchain-qt5-aarch64-raspberrypi3-64-toolchain-3.0.2.sh 
 $ source yes/environment-setup-aarch64-poky-linux
+```  
+
+<a name="enablePySide"></a>
+## Installing PySide for Qt  
+
+   Python2.7 is required, Edit rpi-build/local.conf and add ``` CORE_IMAGE_EXTRA_INSTALL = "python-core python-pip" ```  
+
+<a name="enableSound"></a>
+## Enabling sound 
+
+   Edit rpi-build/local.conf and add the following to enable GStreamer and mgp123
 ```
+IMAGE_INSTALL_append = " gstreamer1.0-plugins-good gstreamer1.0-plugins-base gstreamer1.0-plugins-ugly"
+LICENSE_FLAGS_WHITELIST_append = " commercial commercial_mpg123 commercial_gstreamer1.0-plugins-ugly "
+
+PACKAGECONFIG_append_pn-qtmultimedia = " gstreamer alsa"  
+```  
 
 <a name="baking"></a>
 ## Baking and flashing the image 
@@ -215,7 +237,7 @@ $ sudo dd if=tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.r
 <a name="knownIssues"></a>
 ## Known issues
 
-**Issue:** The halt function in core-image-sato has a bug, where any restart/shutdown/reboot operation interrupts the image every time  
+**Issue 1:** The halt function in core-image-sato has a bug, where any restart/shutdown/reboot operation interrupts the image every time  
 **Workaround:** Cut the power off temporarly each time 
 
 ---
@@ -292,17 +314,11 @@ import icons_rc
 <a name="mp3Player"></a>
 # MP3 player  
 
-<a name="enableSound"></a>
-## Enabling sound in Yocto  
-
-1. Edit rpi-build/local.conf and add the following  
-```
-IMAGE_INSTALL_append = " gstreamer1.0-plugins-good gstreamer1.0-plugins-base gstreamer1.0-plugins-ugly"
-LICENSE_FLAGS_WHITELIST_append = " commercial commercial_mpg123 commercial_gstreamer1.0-plugins-ugly "
-
-PACKAGECONFIG_append_pn-qtmultimedia = " gstreamer alsa"  
-```  
-2. To run any mp3 file  
+1. To run any mp3 file using GStreamer run the following command  
 ```
 $ gst-play-1.0 song.mp3
+```
+2. To run any mp3 file using mpg123 run the following command   
+```
+$ mpg123 song.mp3
 ```
