@@ -155,12 +155,15 @@ iface wlan0 inet static
 	wpa-conf /etc/wpa_supplicant.conf  
 iface default inet dhcp
 ```
-6. In case of X11VNC installed, then you need to enable server at booting time: /etc/profile file is required, which is produced by base-files recipe  
+6. In case of X11VNC installed, then you need to enable server at booting time: /etc/profile file is required, which is produced by base-files recipe. Also for unkonwn reason your wifi may be blocked by rfkill, then you need to unlbock and enable it again  
 ``` 
 $ echo 'FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"' >  init-ifupdown_%.bbappend  
 ```
-  Copy the original profile file then add this line to the end of the file   
+  Copy the original profile file then add these to the end of the file   
 ```
+rfkill unblock wifi
+
+ifconfig wlan0 up
 x11vnc &
 ```  
 **Note:** To know the recipe producing the path, after sourcing run ``` $ oe-pkgdata-util find-path /etc/profile ```  The output will look like ```base-files: /etc/profile ```  
