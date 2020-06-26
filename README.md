@@ -15,17 +15,18 @@ An in-vehicle infotainment system is a combination of systems that deliver enter
 	1. [ Setting up environment ](#settingEnvYocto)  
 	2. [ Configuring network settings ](#networkSettings)
 	3. [ Adding VNC server ](#addingVNC)  
-	4. [ Adding Qt ](#addingQt)       
-	5. [ Baking and flashing the image ](#baking) 
-	6. [ Known issues ](#knownIssues)
+	4. [ Adding Qt ](#addingQt)  
+	6. [ Enabling sound ](#enableSound)
+	7. [ Baking and flashing the image ](#baking) 
+	8. [ Known issues ](#knownIssues)
 2. [ Creating UI  ](#creatingUI)  
 	1. [ Setting up environment ](#settingEnv)  
-	2. [ Starting with Qt Creator ](#qtCreator)  
-	3. [ Developing main screen ](#qtMainScreen)
+	2. [ Configuring the remote deployment settings on Qt creator ](#qtCreatorDeploy)
+	3. [ Starting with Qt Creator ](#qtCreator)  
+	4. [ Developing main screen ](#qtMainScreen)
 3. [ MP3 player](#mp3Player)  
-	1. [ Enabling sound in Yocto ](#enableSound)
 
-## Hardware  
+## General setup  
 **Host machine:** Ubuntu 18.04.4 LTS   
 **Target machine:** Raspberry Pi 3B+  
  
@@ -72,6 +73,18 @@ BBLAYERS ?= " \
 7. Edit rpi-build/local.conf and add the following line  
 ```
 LICENSE_FLAGS_WHITELIST_append = " commercial_faad2 commercial_gstreamer1.0-plugins-ugly "
+```   
+8. For developing you might need rootfs extra space, to add extra size as 5G edit rpi-build/local.conf and add the following line 
+```
+IMAGE_ROOTFS_EXTRA_SPACE = "5242880"
+```
+
+<a name="addingVNC"></a>
+## Adding VNC server
+
+To connect to your target through VNC server, then edit rpi-build/local.conf and add x11vnc to  IMAGE_INSTALL_append variable  
+```
+IMAGE_INSTALL_append = " x11vnc"
 ```  
 
 <a name="networkSettings"></a>
@@ -142,7 +155,7 @@ iface wlan0 inet static
 	wpa-conf /etc/wpa_supplicant.conf  
 iface default inet dhcp
 ```
-6. To enable x11vnc server at bootin time: /etc/profile file is required, which is produced by base-files recipe  
+6. In case of X11VNC installed, then you need to enable server at booting time: /etc/profile file is required, which is produced by base-files recipe  
 ``` 
 $ echo 'FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"' >  init-ifupdown_%.bbappend  
 ```
@@ -150,16 +163,10 @@ $ echo 'FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"' >  init-ifupdown_%.bbapp
 ```
 x11vnc &
 ```  
-**Note:** To know the recipe producing the path, after sourcing run ``` $ oe-pkgdata-util find-path /etc/profile ```  The output will look like ```base-files: /etc/profile ```
+**Note:** To know the recipe producing the path, after sourcing run ``` $ oe-pkgdata-util find-path /etc/profile ```  The output will look like ```base-files: /etc/profile ```  
+There is an issue in the netwrok setup mentioned in the [Known issues](#knownIssues) section in issue no.2  
 
-<a name="addingVNC"></a>
-## Adding VNC server
 
-Edit rpi-build/local.conf and add x11vnc to  IMAGE_INSTALL_append variable  
-```
-IMAGE_INSTALL_append = " \
-	x11vnc"
-```  
 <a name="addingQt"></a>
 ## Adding Qt 
 
@@ -173,31 +180,70 @@ BBLAYERS ?= " \
 ....
 /ABSOLUTE/PATH/meta-qt5 \
 "
+``` 
+3.  To support Qt5 on image, edit rpi-build/local.conf and add
+``` 
+IMAGE_INSTALL_append = " make cmake"
+
+IMAGE_INSTALL_append = " qtbase-tools qtbase qtdeclarative qtimageformats qtmultimedia qtquickcontrols2 qtquickcontrols qtbase-plugins cinematicexperience liberation-fonts"
+
+PACKAGECONFIG_FONTS_append_pn-qtbase = " fontconfig"
 ```  
-3. Install generic SDK tool chain    
+4. To enable remote deployment on RPI using Qt platform, you need to add extra network configuration to rpi-build/local.conf  
 ```
-$ bitbake meta-toolchain
-$ cd tmp/deploy/sdk
-$ ./poky-glibc-x86_64-meta-toolchain-aarch64-raspberrypi3-64-toolchain-3.0.2.sh poky-glibc-x86_64-meta-toolchain-aarch64-raspberrypi3-64-toolchain-3.0.2.sh
-$ source /opt/poky/3.0.2/environment-setup-aarch64-poky-linux
+IMAGE_INSTALL_append = " openssh-sftp-server rsync"
 ```
-4. Install Qt5 tool chain for cross compilation  
+
+<a name="enableSound"></a>
+## Enabling sound 
+
+   Edit rpi-build/local.conf and add the following to enable GStreamer and mgp123
 ```
-$ bitbake meta-toolchain-qt5  
-$ cd tmp/deploy/sdk
-$ ./poky-glibc-x86_64-meta-toolchain-qt5-aarch64-raspberrypi3-64-toolchain-3.0.2.sh 
-$ source yes/environment-setup-aarch64-poky-linux
-```
+IMAGE_INSTALL_append = " gstreamer1.0-plugins-good gstreamer1.0-plugins-base gstreamer1.0-plugins-ugly"
+LICENSE_FLAGS_WHITELIST_append = " commercial commercial_mpg123 commercial_gstreamer1.0-plugins-ugly "
+
+PACKAGECONFIG_append_pn-qtmultimedia = " gstreamer alsa"  
+```  
 
 <a name="baking"></a>
 ## Baking and flashing the image 
+
+- The final local.conf file appending updates     
+```
+### General  ###
+LICENSE_FLAGS_WHITELIST_append = " commercial_faad2 commercial_gstreamer1.0-plugins-ugly "
+IMAGE_ROOTFS_EXTRA_SPACE = "5242880"
+
+### VNC ###
+IMAGE_INSTALL_append = " x11vnc"
+
+### Qt ### 
+
+IMAGE_INSTALL_append = " make cmake"
+
+IMAGE_INSTALL_append = " qtbase-tools qtbase qtdeclarative qtimageformats qtmultimedia qtquickcontrols2 qtquickcontrols qtbase-plugins cinematicexperience liberation-fonts"
+
+PACKAGECONFIG_FONTS_append_pn-qtbase = " fontconfig"
+
+
+### Network support ### 
+IMAGE_INSTALL_append = " openssh-sftp-server rsync"
+
+
+### Sound ###
+
+IMAGE_INSTALL_append = " gstreamer1.0-plugins-good gstreamer1.0-plugins-base gstreamer1.0-plugins-ugly"
+LICENSE_FLAGS_WHITELIST_append = " commercial commercial_mpg123 commercial_gstreamer1.0-plugins-ugly "
+
+PACKAGECONFIG_append_pn-qtmultimedia = " gstreamer alsa"
+```
 
 1. Build the image using the build engine **BitBake**  
 It may take many hours to finish the build process
 ```
 $ bitbake core-image-sato
 ```  
-**core-image-sato** is selected as it supports X11 and a GUI server is required   
+**core-image-sato** is selected as it supports X11 and a GUI server is required. But it has a bug mentioned in the [Known issues](#knownIssues) section in issue no.1     
 
 2. If the build process was successful, the raspberry pi image will be under ```rpi-build/tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.rpi-sdimg```   
 
@@ -215,8 +261,12 @@ $ sudo dd if=tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.r
 <a name="knownIssues"></a>
 ## Known issues
 
-**Issue:** The halt function in core-image-sato has a bug, where any restart/shutdown/reboot operation interrupts the image every time  
-**Workaround:** Cut the power off temporarly each time 
+**Issue 1:** The halt function in core-image-sato has a bug, where any restart/shutdown/reboot operation interrupts the image every time  
+**Workaround:** Cut the power off temporarly each time  
+
+**Issue 2:** Although network setup, the RPI doesn't connect automatically to wifi in the first run after deploying image  
+**Workaround:**  I need to connect my RPI to HDMI and connect to my wifi manually only for the first time  
+
 
 ---
 <a name="creatingUI"></a>
@@ -238,10 +288,33 @@ You may face problems due to your OS version, your pip wheel... etc.
 ```
 $ sudo apt install pyside-tools
 ```  
-3. Install Qt5 Creator/Designer from [Get Qt](https://www.qt.io/download)  
+3. Install Qt5 Creator/Designer from [Get Qt](https://www.qt.io/download), you will also need the qtcreator command line launcher  
+```
+$ sudo apt-get install qtcreator  
+```
+4. Install Qt5 tool chain for cross compilation  
+```
+$ bitbake meta-toolchain-qt5  
+$ cd tmp/deploy/sdk
+$ ./poky-glibc-x86_64-meta-toolchain-qt5-aarch64-raspberrypi3-64-toolchain-3.0.2.sh 
+```   
+
+<a name="qtCreatorDeploy"></a>
+## Configuring the remote deployment settings on Qt creator
+
+1. Frist you need to source the sdk tool chain  
+```
+$ source rpi-build/tmp/deploy/sdk/yes/environment-setup-aarch64-poky-linux  
+```  
+2. From the same terminal launch qtcreator 
+```
+$ qtcreator 
+```  
+3.
 
 <a name="qtCreator"></a>
-## Starting with Qt Creator
+## Starting Design with Qt Creator
+
 1. Create new project with Qt Creator -> **Application (Qt for Python -> Empty)**   
 This will create 2 files (main.pyproject, main.py)
 <p align="center">
@@ -292,17 +365,11 @@ import icons_rc
 <a name="mp3Player"></a>
 # MP3 player  
 
-<a name="enableSound"></a>
-## Enabling sound in Yocto  
-
-1. Edit rpi-build/local.conf and add the following  
-```
-IMAGE_INSTALL_append = " gstreamer1.0-plugins-good gstreamer1.0-plugins-base gstreamer1.0-plugins-ugly"
-LICENSE_FLAGS_WHITELIST_append = " commercial commercial_mpg123 commercial_gstreamer1.0-plugins-ugly "
-
-PACKAGECONFIG_append_pn-qtmultimedia = " gstreamer alsa"  
-```  
-2. To run any mp3 file  
+1. To run any mp3 file using GStreamer run the following command  
 ```
 $ gst-play-1.0 song.mp3
+```
+2. To run any mp3 file using mpg123 run the following command   
+```
+$ mpg123 song.mp3
 ```
