@@ -31,5 +31,7 @@ export PATH PS1 OPIEDIR QPEDIR QTDIR EDITOR TERM
 
 umask 022
 
+rfkill unblock wifi
+
 ifconfig wlan0 up
 x11vnc &
