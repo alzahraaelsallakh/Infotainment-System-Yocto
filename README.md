@@ -24,7 +24,8 @@ An in-vehicle infotainment system is a combination of systems that deliver enter
 	1. [ Setting up environment ](#settingEnv)  
 	2. [ Configuring the cross compiling and remote deployment settings on Qt creator ](#qtCreatorDeploy)
 	3. [ Creating Qt project with C++ ](#qtCreator)  
-3. [ MP3 player](#mp3Player)  
+3. [ MP3 player](#mp3Player) 
+4. [ References ](#references)
 
 ## General setup  
 **Host machine:** Ubuntu 18.04.4 LTS   
@@ -383,3 +384,11 @@ $ gst-play-1.0 song.mp3
 ```
 $ mpg123 song.mp3
 ```
+
+---
+<a name="references"></a>
+# References 
+
+1. [Using Qt Creator to cross-compile and debug Raspberry Pi Qt5 apps ](https://jumpnowtek.com/rpi/Qt-Creator-Setup-for-RPi-cross-development.html) 
+2. [Qt C++ GUI Tutorial for Beginners](https://www.youtube.com/playlist?list=PLS1QulWo1RIZiBcTr5urECberTITj7gjA)  
+3. [Qt Documentation](https://doc.qt.io/qt-5/index.html)
