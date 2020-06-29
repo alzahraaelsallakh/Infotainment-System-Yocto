@@ -24,8 +24,8 @@ An in-vehicle infotainment system is a combination of systems that deliver enter
 	1. [ Setting up environment ](#settingEnv)  
 	2. [ Configuring the cross compiling and remote deployment settings on Qt creator ](#qtCreatorDeploy)
 	3. [ Creating Qt project with C++ ](#qtCreator)  
-3. [ MP3 player](#mp3Player) 
-4. [ References ](#references)
+	4. [ Running MP3 player ](#mp3Player) 
+3. [ References ](#references)
 
 ## General setup  
 **Host machine:** Ubuntu 18.04.4 LTS   
@@ -352,7 +352,7 @@ $ qtcreator
 <a name="qtCreator"></a>
 ## Creating Qt project with C++
 
-1. Create new project as **Application** -> **Qt Widgets Application **  
+1. Create new project as **Application** -> Qt Widgets Application  
 2. When it comes to **Kit Selection** choose your pc and your device, if your pc is not listed add it from devices window  
 3. Following the steps will create main.cpp which is the whole project main function, source/header and ui files for your main class and .pro file which configure your project  
 4. The pro file is updated automatically on each file creation/deletion. You will only need to add the remote executable path where your application is going to be deployed in your image as  
@@ -361,10 +361,10 @@ $ qtcreator
 	INSTALLS += target
 ```  
 5. Starting with my main screen gui, building and running on my pc got the following    
-<p align="center">
-  <img src="../media/mainScreenGui.gif">
-</p>  
-6. Building and running on RPI device deploys the application at the specified path which in my case is `/home/root/app`  
+	<p align="center">
+  		<img src="../media/mainScreenGui.gif">
+	</p>  
+6. Building and running on RPI device deploys the application at the specified path which in my case is ```/home/root/app```
 <p align="center">
   <img src="../media/qtApp.png">
 </p> 
@@ -372,18 +372,16 @@ $ qtcreator
   <img src="../media/qtApp2.png">
 </p> 
 
----
 <a name="mp3Player"></a>
-# MP3 player  
+## Running MP3 player 
 
-1. To run any mp3 file using GStreamer run the following command  
+1. Using QMediaPlayer module requires some packages, make sure they are installed  
 ```
-$ gst-play-1.0 song.mp3
-```
-2. To run any mp3 file using mpg123 run the following command   
-```
-$ mpg123 song.mp3
-```
+$ sudo apt-get install qtmultimedia5-dev libqt5multimediawidgets5 libqt5multimedia5-plugins libqt5multimedia5
+```  
+2. Make sure that qmake selected in Qt version for your PC is Qt5 not Qt4  ``` /usr/lib/qt5/bin/qmake ```  
+3. Clean your project, add ```QT += multimedia``` to your .pro file and run qmake again (right click on your project)  
+
 
 ---
 <a name="references"></a>
