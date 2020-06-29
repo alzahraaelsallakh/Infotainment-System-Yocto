@@ -2,12 +2,20 @@
 #define MAINSCREEN_H
 
 #include <QMainWindow>
-#include <QTimer>
 
+/* Time & Date inclusions */
+#include <QTimer>
 #include <QDate>
 #include <QTime>
 
+/* Media inclusions */
 #include <QIcon>
+
+/* Music inclusions */
+#include <QFile>
+#include <QTextStream>
+#include <QThread>
+
 
 namespace Ui {
 class mainScreen;
@@ -22,12 +30,14 @@ public:
 
     QTimer *timer;
 
+    QTimer *flashDetectionTimer;
+
     QDate currentDate;
     QString date;
     QTime currentTime;
     QString time;
 
-    QIcon phoneIcon;
+
 
     ~mainScreen();
 
@@ -47,6 +57,10 @@ private slots:
     void goBackHome();
 
     void updateTime();
+
+    void updateFlashStatus();
+
+    void updateSongsList();
 
 private:
     Ui::mainScreen *ui;

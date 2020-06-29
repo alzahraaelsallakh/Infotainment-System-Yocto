@@ -28,14 +28,17 @@ INSTALLS += target
 
 SOURCES += \
         main.cpp \
-        mainscreen.cpp
+        mainscreen.cpp \
+    systeminterface.cpp
 
 HEADERS += \
-        mainscreen.h
+        mainscreen.h \
+    systeminterface.h
 
 FORMS += \
         mainscreen.ui
 
 RESOURCES += \
     background.qrc \
-    icons.qrc
+    icons.qrc \
+    musicfiles.qrc

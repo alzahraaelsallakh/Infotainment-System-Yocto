@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/checkFlash">
+        <file>flashStatus.txt</file>
+        <file>displayedSongs.txt</file>
+        <file>media/usb_icon.png</file>
+        <file>media/mp3_icon.png</file>
+    </qresource>
+</RCC>
