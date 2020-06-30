@@ -107,6 +107,7 @@ mainScreen::mainScreen(QWidget *parent) :
 
     /* Setting default music pages */
     ui->runningMusicGroup->hide();
+    ui->currentRunningSongGroup->hide();
 
     /* Setting music control buttons icons */
     ui->playButton->setIcon(QIcon(":/musicControl/media/play_icon.png"));
@@ -289,13 +290,22 @@ void mainScreen::updateFlashStatus()
         ui->noFlashGroup->show();
     }
 
+    if (playingSongFlag == 1)
+    {
+        ui->currentRunningSongGroup->show();
+    }
+    else
+    {
+        ui->currentRunningSongGroup->hide();
+    }
+
 }
 
 /* Updating songs list method */
 void mainScreen::updateSongsList()
 {
     int currentSongsNumber, start,end;
-    string songsListCount, songsList, songName, songPath;
+    string songsListCount, songsList, songPath,songName;
     string listingSongsNumCMD, listingSongsCMD;
 
     currentSongsNumber = ui->runningSongsList->count();
@@ -374,8 +384,11 @@ void mainScreen::onSongChange()
     if (songIndex >= 0 && songIndex < playList->mediaCount())
     {
         ui->runningSongsList->item(songIndex)->setSelected(true);
+        ui->runningSongsList->scrollToItem(ui->runningSongsList->item(songIndex),QAbstractItemView::EnsureVisible);
+
+        ui->currentRunningSongLabel->setText(ui->runningSongsList->item(songIndex)->text());
     }
-    ui->runningSongsList->scrollToItem(ui->runningSongsList->item(songIndex),QAbstractItemView::PositionAtBottom);
+
 
 }
 

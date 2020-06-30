@@ -21,5 +21,6 @@
         <file>media/repeatPressed_icon.png</file>
         <file>media/volumeUp_icon.png</file>
         <file>media/volumeDown_icon.png</file>
+        <file>media/musicRunning_icon.png</file>
     </qresource>
 </RCC>

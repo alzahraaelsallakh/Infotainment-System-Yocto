@@ -96,6 +96,62 @@ background:none;</string>
       <string/>
      </property>
     </widget>
+    <widget class="QGroupBox" name="currentRunningSongGroup">
+     <property name="geometry">
+      <rect>
+       <x>19</x>
+       <y>0</y>
+       <width>221</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border:none;
+background:none;</string>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QLabel" name="musicIconLabel">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>7</y>
+        <width>31</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">image: url(:/musicControl/media/musicRunning_icon.png);</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="currentRunningSongLabel">
+      <property name="geometry">
+       <rect>
+        <x>31</x>
+        <y>7</y>
+        <width>180</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:white;
+</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </widget>
    </widget>
    <widget class="QStackedWidget" name="pagesSwitch">
     <property name="geometry">
