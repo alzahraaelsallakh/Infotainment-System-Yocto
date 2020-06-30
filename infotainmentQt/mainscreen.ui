@@ -61,7 +61,7 @@ background:none;</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">color:black;</string>
+      <string notr="true">color:white;</string>
      </property>
      <property name="text">
       <string/>
@@ -90,7 +90,7 @@ background:none;</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">color:black;</string>
+      <string notr="true">color:white;</string>
      </property>
      <property name="text">
       <string/>
@@ -397,6 +397,9 @@ border-radius:80px;</string>
         <bold>true</bold>
        </font>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color:white;</string>
+      </property>
       <property name="text">
        <string>Phone</string>
       </property>
@@ -460,6 +463,9 @@ border-radius:80px;</string>
         <weight>75</weight>
         <bold>true</bold>
        </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:white;</string>
       </property>
       <property name="text">
        <string>FM</string>
@@ -540,14 +546,14 @@ background:none;</string>
         </font>
        </property>
        <property name="focusPolicy">
-        <enum>Qt::ClickFocus</enum>
+        <enum>Qt::NoFocus</enum>
        </property>
        <property name="autoFillBackground">
         <bool>true</bool>
        </property>
        <property name="styleSheet">
         <string notr="true">background-color: transparent;
-color: black;</string>
+color:white;</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::StyledPanel</enum>
@@ -560,6 +566,9 @@ color: black;</string>
        </property>
        <property name="autoScrollMargin">
         <number>16</number>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectItems</enum>
        </property>
       </widget>
       <widget class="QLabel" name="runningMusicLabel">
@@ -579,7 +588,7 @@ color: black;</string>
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">color:black;</string>
+        <string notr="true">color:white;</string>
        </property>
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>
@@ -619,8 +628,8 @@ color: black;</string>
          <enum>Qt::NoFocus</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">border:none;
-border-radius:50px;</string>
+         <string notr="true">border-radius:50px;
+border:none;</string>
         </property>
         <property name="text">
          <string/>
@@ -705,7 +714,7 @@ border-radius:50px;</string>
          <bool>true</bool>
         </property>
        </widget>
-       <widget class="QPushButton" name="pauseButton">
+       <widget class="QPushButton" name="stopButton">
         <property name="geometry">
          <rect>
           <x>360</x>
@@ -810,6 +819,76 @@ border-radius:50px;</string>
          <bool>true</bool>
         </property>
        </widget>
+       <widget class="QPushButton" name="volumeDownButton">
+        <property name="geometry">
+         <rect>
+          <x>800</x>
+          <y>15</y>
+          <width>30</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border:none;
+border-radius:50px;</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="autoDefault">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="volumeUpButton">
+        <property name="geometry">
+         <rect>
+          <x>840</x>
+          <y>15</y>
+          <width>30</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border:none;
+border-radius:50px;</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="autoDefault">
+         <bool>true</bool>
+        </property>
+       </widget>
       </widget>
       <widget class="QGroupBox" name="zeroSongsGroup">
        <property name="geometry">
@@ -838,7 +917,7 @@ border-radius:50px;</string>
          </font>
         </property>
         <property name="styleSheet">
-         <string notr="true">color:black;</string>
+         <string notr="true">color:white;</string>
         </property>
         <property name="text">
          <string>No MP3 Files To Run</string>
@@ -896,7 +975,7 @@ background:none;</string>
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">color:black;</string>
+        <string notr="true">color:white;</string>
        </property>
        <property name="text">
         <string>No Flash USB Detected!</string>
@@ -918,8 +997,7 @@ background:none;</string>
         </rect>
        </property>
        <property name="styleSheet">
-        <string notr="true">image:url(:/checkFlash/media/usb_icon.png);
-color:black;</string>
+        <string notr="true">image: url(:/checkFlash/media/usb_icon.png);</string>
        </property>
        <property name="text">
         <string/>
@@ -982,6 +1060,9 @@ border-radius:80px;</string>
         <weight>75</weight>
         <bold>true</bold>
        </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:white;</string>
       </property>
       <property name="text">
        <string>GPS</string>
@@ -1047,6 +1128,9 @@ border-radius:80px;</string>
         <bold>true</bold>
        </font>
       </property>
+      <property name="styleSheet">
+       <string notr="true">color:white;</string>
+      </property>
       <property name="text">
        <string>Bluetooth</string>
       </property>
@@ -1110,6 +1194,9 @@ border-radius:80px;</string>
         <weight>75</weight>
         <bold>true</bold>
        </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:white;</string>
       </property>
       <property name="text">
        <string>Settings</string>

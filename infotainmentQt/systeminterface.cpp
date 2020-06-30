@@ -14,8 +14,9 @@ string GetStdoutFromCommand(string cmd) {
             if (fgets(buffer, max_buffer, stream) != NULL) data.append(buffer);
         pclose(stream);
     }
-    /* Trimming extra white spaces */
-    data.erase(remove_if(data.begin(), data.end(), ::isspace), data.end());
+
+    /* Trimming extra new lines */
+    data.erase(remove(data.begin(), data.end(), '\n'), data.end());
     return data;
 }
 

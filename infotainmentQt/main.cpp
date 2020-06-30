@@ -6,10 +6,10 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
     mainScreen w;
     w.setFixedSize(WINDOW_WIDTH,WINDOW_HEIGHT);
     w.show();
 
-    return a.exec();
+    return app.exec();
 }

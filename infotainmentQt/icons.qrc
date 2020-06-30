@@ -16,5 +16,10 @@
         <file>media/backward_icon.png</file>
         <file>media/shuffle_icon.png</file>
         <file>media/repeat_icon.png</file>
+        <file>media/repeatOnce_icon.png</file>
+        <file>media/shufflePressed_icon.png</file>
+        <file>media/repeatPressed_icon.png</file>
+        <file>media/volumeUp_icon.png</file>
+        <file>media/volumeDown_icon.png</file>
     </qresource>
 </RCC>
