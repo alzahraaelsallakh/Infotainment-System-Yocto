@@ -209,7 +209,7 @@ IMAGE_INSTALL_append = " python3-requests python3-pip"
 <a name="enableSound"></a>
 ## Adding sound 
 
-   Edit rpi-build/local.conf and add the following to enable GStreamer and mgp123
+   Edit rpi-build/local.conf and add the following to enable GStreamer or mgp123. Fot Qt Media modules GStreamer is required  
 ```
 IMAGE_INSTALL_append = " gstreamer1.0-plugins-good gstreamer1.0-plugins-base gstreamer1.0-plugins-ugly"
 LICENSE_FLAGS_WHITELIST_append = " commercial commercial_mpg123 commercial_gstreamer1.0-plugins-ugly "
@@ -380,7 +380,8 @@ $ qtcreator
 $ sudo apt-get install qtmultimedia5-dev libqt5multimediawidgets5 libqt5multimedia5-plugins libqt5multimedia5
 ```  
 2. Make sure that qmake selected in Qt version for your PC is Qt5 not Qt4  ``` /usr/lib/qt5/bin/qmake ```  
-3. Clean your project, add ```QT += multimedia``` to your .pro file and run qmake again (right click on your project)  
+3. Clean your project, add ```QT += multimedia``` to your .pro file and run qmake again (right click on your project)   
+4. Qt media moudles rely on GStreamer, make sure that it's enabled as mentioned in [Adding Sound](#enableSound) section   
 
 
 ---
