@@ -23,4 +23,8 @@
         <file>media/volumeDown_icon.png</file>
         <file>media/musicRunning_icon.png</file>
     </qresource>
+    <qresource prefix="/settingsIcons">
+        <file>media/darkThemeOff_icon.png</file>
+        <file>media/darkThemeOn_icon.png</file>
+    </qresource>
 </RCC>

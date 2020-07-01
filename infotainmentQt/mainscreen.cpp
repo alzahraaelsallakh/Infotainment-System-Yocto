@@ -130,6 +130,11 @@ mainScreen::mainScreen(QWidget *parent) :
     /* Music player signals connections */
     connect(ui->runningSongsList, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(onListMailItemClicked(QListWidgetItem*)));
     connect(playList,SIGNAL(currentIndexChanged(int)),SLOT(onSongChange()));
+
+
+    /* Settings buttons icons */
+    ui->darkThemeButton->setIcon(QIcon(":/settingsIcons/media/darkThemeOff_icon.png"));
+    ui->darkThemeButton->setIconSize(QSize(70,34));
 }
 
 
@@ -569,4 +574,25 @@ void mainScreen::on_settingsButton_clicked()
 }
 
 
+/*****************************************************************************************************************************/
+/************************************************    Settings Methods    *****************************************************/
+/*****************************************************************************************************************************/
 
+void mainScreen::on_darkThemeButton_clicked()
+{
+    static int darkThemeFlag = 0;
+    if (darkThemeFlag == 0)
+    {
+        darkThemeFlag = 1;
+
+        ui->darkThemeButton->setIcon(QIcon(":/settingsIcons/media/darkThemeOn_icon.png"));
+        mainScreen::setStyleSheet("background:url(:/mainBG/media/darkBackground.png)");
+    }
+    else
+    {
+        darkThemeFlag = 0;
+        ui->darkThemeButton->setIcon(QIcon(":/settingsIcons/media/darkThemeOff_icon.png"));
+        mainScreen::setStyleSheet("background:url(:/mainBG/media/colorfulBackground.jpeg)");
+
+    }
+}

@@ -94,6 +94,8 @@ private slots:
 
     void on_volumeUpButton_clicked();
 
+    void on_darkThemeButton_clicked();
+
 private:
     Ui::mainScreen *ui;
 };
