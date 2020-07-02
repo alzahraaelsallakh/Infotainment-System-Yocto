@@ -17,14 +17,15 @@ An in-vehicle infotainment system is a combination of systems that deliver enter
 	3. [ Adding VNC server ](#addingVNC)  
 	4. [ Adding Qt ](#addingQt)   
 	5. [ Adding python ](#addingPython)
-	6. [ Adding sound ](#enableSound)
-	7. [ Baking and flashing the image ](#baking) 
-	8. [ Known issues ](#knownIssues)
+	6. [ Adding bluetooth ](#addingBluetooth)  
+	7. [ Adding sound ](#enableSound)
+	8. [ Baking and flashing the image ](#baking) 
+	9. [ Known issues ](#knownIssues)
 2. [ Creating UI  ](#creatingUI)  
 	1. [ Setting up environment ](#settingEnv)  
 	2. [ Configuring the cross compiling and remote deployment settings on Qt creator ](#qtCreatorDeploy)
 	3. [ Creating Qt project with C++ ](#qtCreator)  
-	4. [ Running MP3 player ](#mp3Player) 
+	4. [ Running multimedia Mp3 and Mp4 ](#multimedia)  
 3. [ References ](#references)
 
 ## General setup  
@@ -74,6 +75,8 @@ BBLAYERS ?= " \
 7. Edit rpi-build/local.conf and add the following line  
 ```
 LICENSE_FLAGS_WHITELIST_append = " commercial_faad2 commercial_gstreamer1.0-plugins-ugly "
+VIRTUAL-RUNTIME_init_manager = "systemd"
+DISTRO_FEATURES_append = " systemd"
 ```   
 8. For developing you might need rootfs extra space, to add extra size as 5G edit rpi-build/local.conf and add the following line 
 ```
@@ -197,6 +200,7 @@ PACKAGECONFIG_FONTS_append_pn-qtbase = " fontconfig"
 ```
 IMAGE_INSTALL_append = " openssh-sftp-server rsync"
 ```  
+
 <a name="addingPython"></a>
 ## Adding python  
 
@@ -205,55 +209,36 @@ IMAGE_INSTALL_append = " openssh-sftp-server rsync"
 CORE_IMAGE_EXTRA_INSTALL = "python-core python-pip"
 IMAGE_INSTALL_append = " python3-requests python3-pip"
 ```
+<a name="addingBluetooth"></a>
+## Adding bluetooth  
+
+   Edit rpi-build/local.conf to append bluez and to enable UART  
+```
+CORE_IMAGE_EXTRA_INSTALL = " rsync "
+DISTRO_FEATURES_append = " bluez5 bluetooth linux-firmware-bcm43430"
+IMAGE_INSTALL_append = " bluez5 linux-firmware-bcm43430 i2c-tools hostapd dhcp-server udev-rules-rpi bridge-utils iptables"
+ENABLE_UART = "1" 
+```
 
 <a name="enableSound"></a>
 ## Adding sound 
 
-   Edit rpi-build/local.conf and add the following to enable GStreamer or mgp123. Fot Qt Media modules GStreamer is required  
+1. Edit rpi-build/local.conf and add the following to enable GStreamer or mgp123. Fot Qt Media modules GStreamer is required  
 ```
 IMAGE_INSTALL_append = " gstreamer1.0-plugins-good gstreamer1.0-plugins-base gstreamer1.0-plugins-ugly"
 LICENSE_FLAGS_WHITELIST_append = " commercial commercial_mpg123 commercial_gstreamer1.0-plugins-ugly "
 
 PACKAGECONFIG_append_pn-qtmultimedia = " gstreamer alsa"  
-```  
+```    
+2. Pulseaudio is required to stream audio over bluetooth  
+```
+DISTRO_FEATURES_append = " pulseaudio"
+IMAGE_INSTALL_append = " pulseaudio pulseaudio-module-dbus-protocol pulseaudio-server pulseaudio-module-bluetooth-discover pulseaudio-module-bluetooth-policy pulseaudio-module-bluez5-device pulseaudio-module-bluez5-discover alsa-utils alsa-plugins"
+```
+
 
 <a name="baking"></a>
 ## Baking and flashing the image 
-
-- The final local.conf file appending updates     
-```
-### General  ###
-LICENSE_FLAGS_WHITELIST_append = " commercial_faad2 commercial_gstreamer1.0-plugins-ugly "
-IMAGE_ROOTFS_EXTRA_SPACE = "5242880"
-
-### VNC ###
-IMAGE_INSTALL_append = " x11vnc"
-
-### Qt ### 
-
-IMAGE_INSTALL_append = " make cmake"
-
-IMAGE_INSTALL_append = " qtbase-tools qtbase qtdeclarative qtimageformats qtmultimedia qtquickcontrols2 qtquickcontrols qtbase-plugins cinematicexperience liberation-fonts"
-
-PACKAGECONFIG_FONTS_append_pn-qtbase = " fontconfig"
-
-
-### Network support ### 
-IMAGE_INSTALL_append = " openssh-sftp-server rsync"
-
-
-#### Python ####
-
-CORE_IMAGE_EXTRA_INSTALL = "python-core python-pip"
-IMAGE_INSTALL_append = " python3-requests python3-pip"
-
-### Sound ###
-
-IMAGE_INSTALL_append = " gstreamer1.0-plugins-good gstreamer1.0-plugins-base gstreamer1.0-plugins-ugly"
-LICENSE_FLAGS_WHITELIST_append = " commercial commercial_mpg123 commercial_gstreamer1.0-plugins-ugly "
-
-PACKAGECONFIG_append_pn-qtmultimedia = " gstreamer alsa"
-```
 
 1. Build the image using the build engine **BitBake**  
 It may take many hours to finish the build process
@@ -294,7 +279,7 @@ $ sudo dd if=tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.r
 <a name="settingEnv"></a>
 ## Setting up environment
 
-1. Install Qt5 Creator/Designer from [Get Qt](https://www.qt.io/download), but mainly you will need the qtcreator command line launcher  
+1. Install Qt5 Creator command line launcher, my Qt version is 5.9.5  
 ```
 $ sudo apt-get install qtcreator  
 ```
@@ -372,16 +357,19 @@ $ qtcreator
   <img src="../media/qtApp2.png">
 </p> 
 
-<a name="mp3Player"></a>
-## Running MP3 player 
+<a name="multimedia"></a>
+## Running multimedia Mp3 and Mp4
 
-1. Using QMediaPlayer module requires some packages, make sure they are installed  
+1. Qt helpful classes for Mp3 are **QMediaPlayer** and **QMediaPlaylist**   
+2. Qt helpful classes for Mp4 are **QGraphicsScene, QGraphicsVideoItem, QMediaPlayer** and **QMediaPlaylist**  
+3. Using QMediaPlayer module requires some packages, make sure they are installed  
 ```
 $ sudo apt-get install qtmultimedia5-dev libqt5multimediawidgets5 libqt5multimedia5-plugins libqt5multimedia5
 ```  
-2. Make sure that qmake selected in Qt version for your PC is Qt5 not Qt4  ``` /usr/lib/qt5/bin/qmake ```  
-3. Clean your project, add ```QT += multimedia``` to your .pro file and run qmake again (right click on your project)   
-4. Qt media moudles rely on GStreamer, make sure that it's enabled as mentioned in [Adding Sound](#enableSound) section   
+4. Make sure that qmake selected in Qt version for your PC is Qt5 not Qt4  ``` /usr/lib/qt5/bin/qmake ```  
+5. Clean your project, add ```QT += multimedia multimediawidgets``` to your .pro file and run qmake again (right click on your project)   
+6. Qt media moudles rely on GStreamer, make sure that it's enabled as mentioned in [Adding Sound](#enableSound) section   
+
 
 
 ---
@@ -390,4 +378,5 @@ $ sudo apt-get install qtmultimedia5-dev libqt5multimediawidgets5 libqt5multimed
 
 1. [Using Qt Creator to cross-compile and debug Raspberry Pi Qt5 apps ](https://jumpnowtek.com/rpi/Qt-Creator-Setup-for-RPi-cross-development.html) 
 2. [Qt C++ GUI Tutorial for Beginners](https://www.youtube.com/playlist?list=PLS1QulWo1RIZiBcTr5urECberTITj7gjA)  
-3. [Qt Documentation](https://doc.qt.io/qt-5/index.html)
+3. [Qt Documentation](https://doc.qt.io/qt-5/index.html)  
+4. [Intel Edison audio output to bluetooth speaker](https://tl00.wordpress.com/2015/01/28/11/)
