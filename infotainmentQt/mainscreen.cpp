@@ -21,11 +21,12 @@ using namespace std;
 /* Stack widget pages for main screen */
 #define HOME_PAGE_INDEX 0
 #define PHONE_PAGE_INDEX 1
-#define FM_PAGE_INDEX 2
+#define VIDEO_PAGE_INDEX 2
 #define MUSIC_PAGE_INDEX 3
 #define GPS_PAGE_INDEX 4
 #define BLUETOOTH_PAGE_INDEX 5
 #define SETTINGS_PAGE_INDEX 6
+#define VIDEO_SHOW_PAGE 7
 
 /* Music Macros */
 #define NO_FLASH_DETECTED   0
@@ -37,9 +38,21 @@ using namespace std;
 int flashStatus = NO_FLASH_DETECTED;
 string usbName, usbPath;
 string songsExt = ".mp3";
+
 int playingSongFlag = 0;
 int currentVolume = 50;
+
+
+/* Video variables */
+string videosExt = ".mp4";
+int playingVideoFlag = 0;
+long long int videoStep = 10000;
+
+/* Multimedia variables */
 int volumeStep = 10;
+
+
+/* System Functions */
 
 int mountUSB (void);
 int unmountUSB(void);
@@ -67,7 +80,7 @@ mainScreen::mainScreen(QWidget *parent) :
 
     /* Connecting home buttons to goBackHomeFunction */
     connect(ui->homeButtonPh,SIGNAL(clicked()),SLOT(goBackHome()));
-    connect(ui->homeButtonFm,SIGNAL(clicked()),SLOT(goBackHome()));
+    connect(ui->homeButtonVd,SIGNAL(clicked()),SLOT(goBackHome()));
     connect(ui->homeButtonMs,SIGNAL(clicked()),SLOT(goBackHome()));
     connect(ui->homeButtonGp,SIGNAL(clicked()),SLOT(goBackHome()));
     connect(ui->homeButtonBl,SIGNAL(clicked()),SLOT(goBackHome()));
@@ -77,8 +90,8 @@ mainScreen::mainScreen(QWidget *parent) :
     ui->phoneButton->setIcon(QIcon(":/mainIcons/media/calls_icon.png"));
     ui->phoneButton->setIconSize(QSize(100,100));
 
-    ui->fmButton->setIcon(QIcon(":/mainIcons/media/fm_icon.png"));
-    ui->fmButton->setIconSize(QSize(100,100));
+    ui->videoButton->setIcon(QIcon(":/mainIcons/media/video_icon.png"));
+    ui->videoButton->setIconSize(QSize(100,100));
 
     ui->musicButton->setIcon(QIcon(":/mainIcons/media/music_icon.png"));
     ui->musicButton->setIconSize(QSize(100,100));
@@ -94,8 +107,8 @@ mainScreen::mainScreen(QWidget *parent) :
 
     ui->homeButtonPh->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
     ui->homeButtonPh->setIconSize(QSize(50,50));
-    ui->homeButtonFm->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
-    ui->homeButtonFm->setIconSize(QSize(50,50));
+    ui->homeButtonVd->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
+    ui->homeButtonVd->setIconSize(QSize(50,50));
     ui->homeButtonMs->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
     ui->homeButtonMs->setIconSize(QSize(50,50));
     ui->homeButtonGp->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
@@ -105,9 +118,11 @@ mainScreen::mainScreen(QWidget *parent) :
     ui->homeButtonSt->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
     ui->homeButtonSt->setIconSize(QSize(50,50));
 
+
     /* Setting default music pages */
     ui->runningMusicGroup->hide();
-    ui->currentRunningSongGroup->hide();
+    ui->currentRunningMediaGroup->hide();
+
 
     /* Setting music control buttons icons */
     ui->playButton->setIcon(QIcon(":/musicControl/media/play_icon.png"));
@@ -128,13 +143,42 @@ mainScreen::mainScreen(QWidget *parent) :
     ui->volumeDownButton->setIconSize(QSize(30,30));
 
     /* Music player signals connections */
-    connect(ui->runningSongsList, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(onListMailItemClicked(QListWidgetItem*)));
+    connect(ui->runningSongsList, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(onSongListItemClicked(QListWidgetItem*)));
     connect(playList,SIGNAL(currentIndexChanged(int)),SLOT(onSongChange()));
+
+    /* Setting default video pages */
+    ui->runningVideoGroup->hide();
+    connect(ui->runningVideosList, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(onVideoListItemClicked(QListWidgetItem*)));
+
+    /* Video display setup */
+    videoPlayer->setVideoOutput(videoGraphicsItem);
+    videoScene->addItem(videoGraphicsItem);
+    ui->videoView->setScene(videoScene);
+    videoGraphicsItem->setSize(QSize(900,380));
+
+    ui->playVideoButton->setIcon(QIcon(":/musicControl/media/play_icon.png"));
+    ui->playVideoButton->setIconSize(QSize(40,40));
+    ui->forwardVideoButton->setIcon(QIcon(":/musicControl/media/forward_icon.png"));
+    ui->forwardVideoButton->setIconSize(QSize(40,40));
+    ui->backwardVideoButton->setIcon(QIcon(":/musicControl/media/backward_icon.png"));
+    ui->backwardVideoButton->setIconSize(QSize(40,40));
+    ui->stopVideoButton->setIcon(QIcon(":/musicControl/media/stop_icon.png"));
+    ui->stopVideoButton->setIconSize(QSize(40,40));
+    ui->volumeUpVideoButton->setIcon(QIcon(":/musicControl/media/volumeUp_icon.png"));
+    ui->volumeUpVideoButton->setIconSize(QSize(30,30));
+    ui->volumeDownVideoButton->setIcon(QIcon(":/musicControl/media/volumeDown_icon.png"));
+    ui->volumeDownVideoButton->setIconSize(QSize(30,30));
+    ui->goTovideosListButton->setIcon(QIcon(":/videoIcons/media/back_icon.png"));
+    ui->goTovideosListButton->setIconSize(QSize(30,30));
 
 
     /* Settings buttons icons */
     ui->darkThemeButton->setIcon(QIcon(":/settingsIcons/media/darkThemeOff_icon.png"));
     ui->darkThemeButton->setIconSize(QSize(70,34));
+
+    /* Bluetooth setup */
+    ui->bluetoothIconLabel->hide();
+
 }
 
 
@@ -171,15 +215,9 @@ void mainScreen::goBackHome (void)
     ui->pagesSwitch->setCurrentIndex(HOME_PAGE_INDEX);
 }
 
-
 /*****************************************************************************************************************************/
-/*************************************************    Music Methods    *******************************************************/
+/**********************************************    Multimedia Methods    *****************************************************/
 /*****************************************************************************************************************************/
-
-void mainScreen::on_musicButton_clicked()
-{
-    ui->pagesSwitch->setCurrentIndex(MUSIC_PAGE_INDEX);
-}
 
 int mountUSB (void)
 {
@@ -243,7 +281,7 @@ void mainScreen::updateFlashStatus()
             mountUSB();
 
         }
-        ui->noFlashGroup->hide();
+        ui->noFlashGroupMusic->hide();
         ui->runningMusicGroup->show();
         updateSongsList();
 
@@ -252,9 +290,12 @@ void mainScreen::updateFlashStatus()
 #if USING_DEV == USING_PC
         usbPath = "/media/Stuff/" + usbName + "/" ;
 
-        ui->noFlashGroup->hide();
+        ui->noFlashGroupMusic->hide();
+        ui->noFlashGroupVideo->hide();
         ui->runningMusicGroup->show();
+        ui->runningVideoGroup->show();
         updateSongsList();
+        updateVideosList();
 #endif
 
     }
@@ -275,7 +316,7 @@ void mainScreen::updateFlashStatus()
             {
                 /* In case of device unmounted successfully then update songs */
                 ui->runningMusicGroup->hide();
-                ui->noFlashGroup->show();
+                ui->noFlashGroupMusic->show();
                 updateSongsList();
             }
         }
@@ -283,8 +324,11 @@ void mainScreen::updateFlashStatus()
 #endif
 #if USING_DEV == USING_PC
         ui->runningMusicGroup->hide();
-        ui->noFlashGroup->show();
+        ui->runningVideoGroup->hide();
+        ui->noFlashGroupMusic->show();
+        ui->noFlashGroupVideo->show();
         updateSongsList();
+        updateVideosList();
 #endif
 
     }
@@ -292,18 +336,36 @@ void mainScreen::updateFlashStatus()
     else if (devicesConnected.empty() && flashStatus == NO_FLASH_DETECTED)
     {
         ui->runningMusicGroup->hide();
-        ui->noFlashGroup->show();
+        ui->runningVideoGroup->hide();
+        ui->noFlashGroupMusic->show();
+        ui->noFlashGroupVideo->show();
     }
 
     if (playingSongFlag == 1)
     {
-        ui->currentRunningSongGroup->show();
+        ui->currentRunningMediaGroup->show();
+        ui->runningMediaLabel->setStyleSheet("image: url(:/mainIcons/media/music_icon.png)");
+    }
+    else if (playingVideoFlag == 1)
+    {
+        ui->currentRunningMediaGroup->show();
+        ui->runningMediaLabel->setStyleSheet("image: url(:/mainIcons/media/video_icon.png)");
     }
     else
     {
-        ui->currentRunningSongGroup->hide();
+        ui->currentRunningMediaGroup->hide();
     }
 
+}
+
+
+/*****************************************************************************************************************************/
+/*************************************************    Music Methods    *******************************************************/
+/*****************************************************************************************************************************/
+
+void mainScreen::on_musicButton_clicked()
+{
+    ui->pagesSwitch->setCurrentIndex(MUSIC_PAGE_INDEX);
 }
 
 /* Updating songs list method */
@@ -326,7 +388,8 @@ void mainScreen::updateSongsList()
     else
     {
         listingSongsNumCMD = "ls " + usbPath + " | grep " + songsExt + " | wc -l";
-        songsListCount = GetStdoutFromCommand(listingSongsCMD);
+        songsListCount = GetStdoutFromCommand(listingSongsNumCMD);
+
 
         if (songsListCount == "0")
         {
@@ -343,7 +406,7 @@ void mainScreen::updateSongsList()
 
             /* Appned songs to music playlist and songs list in display */
 
-            listingSongsCMD = "find " + usbPath + " -type f -name '*.mp3'";
+            listingSongsCMD = "find " + usbPath + " -type f -name '*" + songsExt + "'";
             songsList = GetStdoutFromCommand(listingSongsCMD);
 
             start = 0;
@@ -361,6 +424,7 @@ void mainScreen::updateSongsList()
                 ui->runningSongsList->setSpacing(7);
 
                 start = end + songsExt.length();
+
             }
 
             playList->setPlaybackMode(QMediaPlaylist::Sequential);
@@ -370,8 +434,7 @@ void mainScreen::updateSongsList()
     }
 }
 
-
-void mainScreen::onListMailItemClicked(QListWidgetItem* item)
+void mainScreen::onSongListItemClicked(QListWidgetItem* item)
 {
     int chosenSong = ui->runningSongsList->row(item);
     playList->setCurrentIndex(chosenSong);
@@ -391,7 +454,7 @@ void mainScreen::onSongChange()
         ui->runningSongsList->item(songIndex)->setSelected(true);
         ui->runningSongsList->scrollToItem(ui->runningSongsList->item(songIndex),QAbstractItemView::EnsureVisible);
 
-        ui->currentRunningSongLabel->setText(ui->runningSongsList->item(songIndex)->text());
+        ui->currentRunningMediaLabel->setText(ui->runningSongsList->item(songIndex)->text());
     }
 
 
@@ -411,7 +474,6 @@ void mainScreen::playToggle()
 
     ui->playButton->setIcon(QIcon(":/musicControl/media/play_icon.png"));
 }
-
 
 /* Music control buttons */
 void mainScreen::on_playButton_clicked()
@@ -531,13 +593,13 @@ void mainScreen::on_volumeDownButton_clicked()
 void mainScreen::on_volumeUpButton_clicked()
 {
 
-   currentVolume += volumeStep;
-   if (currentVolume > MAX_VOLUME)
-   {
-       currentVolume = MAX_VOLUME;
-   }
+    currentVolume += volumeStep;
+    if (currentVolume > MAX_VOLUME)
+    {
+        currentVolume = MAX_VOLUME;
+    }
 
-   musicPlayer->setVolume(currentVolume);
+    musicPlayer->setVolume(currentVolume);
 }
 
 
@@ -552,10 +614,211 @@ void mainScreen::on_phoneButton_clicked()
     ui->pagesSwitch->setCurrentIndex(PHONE_PAGE_INDEX);
 }
 
-void mainScreen::on_fmButton_clicked()
+
+/*****************************************************************************************************************************/
+/************************************************    Video Methods    *****************************************************/
+/*****************************************************************************************************************************/
+
+void mainScreen::on_videoButton_clicked()
 {
-    ui->pagesSwitch->setCurrentIndex(FM_PAGE_INDEX);
+    ui->pagesSwitch->setCurrentIndex(VIDEO_PAGE_INDEX);
 }
+
+void mainScreen::updateVideosList()
+{
+    int currentVideoNumber, start,end;
+    string videosListCount, videosList, videoPath,videoName;
+    string listingVideosNumCMD, listingVideosCMD;
+
+    currentVideoNumber = ui->runningVideosList->count();
+
+    if (flashStatus == NO_FLASH_DETECTED)
+    {
+        if (currentVideoNumber != 0)
+        {
+            ui->runningVideosList->clear();
+            videoPlayList->clear();
+        }
+    }
+    else
+    {
+        listingVideosNumCMD = "ls " + usbPath + " | grep " + videosExt + " | wc -l";
+        videosListCount = GetStdoutFromCommand(listingVideosNumCMD);
+
+        if (videosListCount == "0")
+        {
+            ui->runningVideosList->hide();
+            ui->zeroVideosGroup->show();
+        }
+        else
+        {
+            ui->zeroVideosGroup->hide();
+            ui->runningVideosList->show();
+
+            /* Just to make sure that any old displayed sone is removed */
+            ui->runningVideosList->clear();
+
+            /* Appned songs to music playlist and songs list in display */
+
+            listingVideosCMD = "find " + usbPath + " -type f -name '*" + videosExt + "'";
+            videosList = GetStdoutFromCommand(listingVideosCMD);
+
+            start = 0;
+            while (start < videosList.length())
+            {
+                end = videosList.find(videosExt,start);
+                videoPath = videosList.substr(start,(end-start));
+                videoPath = videoPath + videosExt;
+
+                videoName = videoPath.substr(videoPath.rfind('/')+1, videoPath.length());
+
+                videoPlayList->addMedia(QUrl::fromLocalFile(QString::fromStdString(videoPath)));
+
+                ui->runningVideosList->addItem( QString::fromStdString(videoName));
+                ui->runningVideosList->setSpacing(7);
+
+                start = end + videosExt.length();
+            }
+
+            videoPlayList->setPlaybackMode(QMediaPlaylist::CurrentItemOnce);
+
+            videoPlayer->setPlaylist(videoPlayList);
+        }
+    }
+}
+
+void mainScreen::playVideo()
+{
+
+    /* Stop music first*/
+    if (playingSongFlag == 1)
+    {
+        musicPlayer->stop();
+
+        playToggle();
+    }
+
+    playingVideoFlag = 1;
+    videoPlayer->play();
+    ui->playVideoButton->setIcon(QIcon(":/musicControl/media/pause_icon.png"));
+
+}
+
+void mainScreen::stopVideo()
+{
+    playingVideoFlag = 0;
+    videoPlayer->pause();
+    ui->playVideoButton->setIcon(QIcon(":/musicControl/media/play_icon.png"));
+
+}
+
+void mainScreen::onVideoListItemClicked(QListWidgetItem* item)
+{
+    int chosenVideo = ui->runningVideosList->row(item);
+
+    if (chosenVideo != videoPlayList->currentIndex())
+    {
+        videoPlayList->setCurrentIndex(chosenVideo);
+    }
+
+    ui->pagesSwitch->setCurrentIndex(VIDEO_SHOW_PAGE);
+
+    ui->currentRunningMediaLabel->setText(ui->runningVideosList->item(chosenVideo)->text());
+
+    playVideo();
+}
+
+void mainScreen::on_goTovideosListButton_clicked()
+{
+    /* Stop any running video first */
+
+    videoPlayer->pause();
+
+    ui->pagesSwitch->setCurrentIndex(VIDEO_PAGE_INDEX);
+}
+
+void mainScreen::on_playVideoButton_clicked()
+{
+
+    if (playingVideoFlag == 0)
+    {
+        playVideo();
+    }
+    else
+    {
+       stopVideo();
+    }
+
+}
+
+void mainScreen::on_stopVideoButton_clicked()
+{
+
+    /* To keep the video preview instead of black screen that results of stop function */
+    videoPlayList->setCurrentIndex(videoPlayList->currentIndex());
+
+    stopVideo();
+}
+
+void mainScreen::on_backwardVideoButton_clicked()
+{
+    long long int pos = videoPlayer->position();
+
+    pos = pos - videoStep;
+
+    if (pos < 0)
+    {
+        pos = 0;
+    }
+
+    videoPlayer->setPosition(pos);
+
+}
+
+void mainScreen::on_forwardVideoButton_clicked()
+{
+    long long int pos = videoPlayer->position();
+
+    pos = pos + videoStep;
+
+    if (pos >= videoPlayer->duration())
+    {
+        videoPlayList->setCurrentIndex(videoPlayList->currentIndex());
+        stopVideo();
+    }
+    else
+    {
+        videoPlayer->setPosition(pos);
+    }
+
+}
+
+void mainScreen::on_volumeDownVideoButton_clicked()
+{
+    currentVolume -= volumeStep;
+    if (currentVolume < MIN_VOLUME)
+    {
+        currentVolume = MIN_VOLUME;
+    }
+
+    videoPlayer->setVolume(currentVolume);
+}
+
+void mainScreen::on_volumeUpVideoButton_clicked()
+{
+    currentVolume += volumeStep;
+    if (currentVolume > MAX_VOLUME)
+    {
+        currentVolume = MAX_VOLUME;
+    }
+
+    videoPlayer->setVolume(currentVolume);
+}
+
+
+/*****************************************************************************************************************************/
+/**************************************************    GPS Methods    ********************************************************/
+/*****************************************************************************************************************************/
 
 
 void mainScreen::on_gpsButton_clicked()
@@ -563,20 +826,61 @@ void mainScreen::on_gpsButton_clicked()
     ui->pagesSwitch->setCurrentIndex(GPS_PAGE_INDEX);
 }
 
+
+/*****************************************************************************************************************************/
+/************************************************    Bluetooth Methods    *****************************************************/
+/*****************************************************************************************************************************/
+
 void mainScreen::on_bluetoothButton_clicked()
 {
     ui->pagesSwitch->setCurrentIndex(BLUETOOTH_PAGE_INDEX);
+
 }
+
+void mainScreen::on_enableBluetoothButton_clicked()
+{
+    string enableBluetoothCMD;
+    const char *cmd;
+    int systemStatus;
+
+    enableBluetoothCMD = "bluetoothctl power on && bluetoothctl discoverable on && bluetoothctl pairable on && bluetoothctl agent NoInputNoOutput";
+
+    cmd = enableBluetoothCMD.c_str();
+    systemStatus = system (cmd);
+    if (systemStatus == COMMAND_SUCCEDED)
+    {
+        ui->bluetoothIconLabel->show();
+    }
+
+}
+
+void mainScreen::on_disableBluetoothButton_clicked()
+{
+    string disableBluetoothCMD;
+    const char *cmd;
+    int systemStatus;
+
+    disableBluetoothCMD = "bluetoothctl power off";
+
+    cmd = disableBluetoothCMD.c_str();
+    systemStatus = system(cmd);
+    if (systemStatus == COMMAND_SUCCEDED)
+    {
+        ui->bluetoothIconLabel->hide();
+    }
+}
+
+
+
+/*****************************************************************************************************************************/
+/************************************************    Settings Methods    *****************************************************/
+/*****************************************************************************************************************************/
 
 void mainScreen::on_settingsButton_clicked()
 {
     ui->pagesSwitch->setCurrentIndex(SETTINGS_PAGE_INDEX);
 }
 
-
-/*****************************************************************************************************************************/
-/************************************************    Settings Methods    *****************************************************/
-/*****************************************************************************************************************************/
 
 void mainScreen::on_darkThemeButton_clicked()
 {
@@ -596,3 +900,8 @@ void mainScreen::on_darkThemeButton_clicked()
 
     }
 }
+
+
+
+
+

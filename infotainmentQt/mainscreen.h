@@ -21,6 +21,12 @@
 #include <QDir>
 #include <QUrl>
 
+
+/* MP4 inclusions */
+#include <QRectF>
+#include <QGraphicsScene>
+#include <QGraphicsVideoItem>
+
 #include <unistd.h>
 
 
@@ -47,12 +53,17 @@ public:
     QMediaPlaylist *playList = new QMediaPlaylist;
     QMediaPlayer *musicPlayer = new QMediaPlayer;
 
+    QMediaPlayer *videoPlayer = new QMediaPlayer;
+    QMediaPlaylist *videoPlayList = new QMediaPlaylist;
+    QGraphicsScene *videoScene = new QGraphicsScene;
+    QGraphicsVideoItem *videoGraphicsItem = new QGraphicsVideoItem;
+
     ~mainScreen();
 
 private slots:
     void on_phoneButton_clicked();
 
-    void on_fmButton_clicked();
+    void on_videoButton_clicked();
 
     void on_musicButton_clicked();
 
@@ -70,6 +81,8 @@ private slots:
 
     void updateSongsList();
 
+    void updateVideosList();
+
     void on_playButton_clicked();
 
     void on_forwardButton_clicked();
@@ -86,7 +99,7 @@ private slots:
 
     void playToggle();
 
-    void onListMailItemClicked(QListWidgetItem* item);
+    void onSongListItemClicked(QListWidgetItem* item);
 
     void onSongChange();
 
@@ -96,8 +109,34 @@ private slots:
 
     void on_darkThemeButton_clicked();
 
+    void on_enableBluetoothButton_clicked();
+
+    void on_disableBluetoothButton_clicked();
+
+    void on_goTovideosListButton_clicked();
+
+    void onVideoListItemClicked(QListWidgetItem* item);
+
+    void on_backwardVideoButton_clicked();
+
+    void on_forwardVideoButton_clicked();
+
+    void on_playVideoButton_clicked();
+
+    void on_stopVideoButton_clicked();
+
+    void on_volumeDownVideoButton_clicked();
+
+    void on_volumeUpVideoButton_clicked();
+
+    void playVideo();
+
+    void stopVideo();
+
 private:
     Ui::mainScreen *ui;
 };
+
+
 
 #endif // MAINSCREEN_H

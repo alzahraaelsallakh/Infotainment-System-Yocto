@@ -96,7 +96,7 @@ background:none;</string>
       <string/>
      </property>
     </widget>
-    <widget class="QGroupBox" name="currentRunningSongGroup">
+    <widget class="QGroupBox" name="currentRunningMediaGroup">
      <property name="geometry">
       <rect>
        <x>19</x>
@@ -112,7 +112,7 @@ background:none;</string>
      <property name="title">
       <string/>
      </property>
-     <widget class="QLabel" name="musicIconLabel">
+     <widget class="QLabel" name="runningMediaLabel">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -128,13 +128,13 @@ background:none;</string>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">image: url(:/musicControl/media/musicRunning_icon.png);</string>
+       <string notr="true">image: url(:/mainIcons/media/music_icon.png);</string>
       </property>
       <property name="text">
        <string/>
       </property>
      </widget>
-     <widget class="QLabel" name="currentRunningSongLabel">
+     <widget class="QLabel" name="currentRunningMediaLabel">
       <property name="geometry">
        <rect>
         <x>31</x>
@@ -152,6 +152,28 @@ background:none;</string>
       </property>
      </widget>
     </widget>
+    <widget class="QLabel" name="bluetoothIconLabel">
+     <property name="geometry">
+      <rect>
+       <x>750</x>
+       <y>5</y>
+       <width>31</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">image:url(:/bluetoothControl/media/bluetoothRunning_icon.png);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </widget>
    <widget class="QStackedWidget" name="pagesSwitch">
     <property name="geometry">
@@ -166,7 +188,7 @@ background:none;</string>
      <string notr="true"/>
     </property>
     <property name="currentIndex">
-     <number>6</number>
+     <number>7</number>
     </property>
     <widget class="QWidget" name="homePage">
      <widget class="QGroupBox" name="iconsGroup">
@@ -220,7 +242,7 @@ border-radius:50px;</string>
         <bool>true</bool>
        </property>
       </widget>
-      <widget class="QPushButton" name="fmButton">
+      <widget class="QPushButton" name="videoButton">
        <property name="geometry">
         <rect>
          <x>350</x>
@@ -464,12 +486,12 @@ border-radius:80px;</string>
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="fmPage">
+    <widget class="QWidget" name="videoPage">
      <property name="styleSheet">
       <string notr="true">background:none;
 </string>
      </property>
-     <widget class="QPushButton" name="homeButtonFm">
+     <widget class="QPushButton" name="homeButtonVd">
       <property name="geometry">
        <rect>
         <x>470</x>
@@ -504,31 +526,201 @@ border-radius:80px;</string>
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QLabel" name="fmLabel">
+     <widget class="QGroupBox" name="noFlashGroupVideo">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="geometry">
        <rect>
-        <x>210</x>
-        <y>60</y>
-        <width>571</width>
-        <height>291</height>
+        <x>170</x>
+        <y>48</y>
+        <width>670</width>
+        <height>330</height>
        </rect>
       </property>
-      <property name="font">
-       <font>
-        <pointsize>62</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
+      <property name="styleSheet">
+       <string notr="true">border:none;
+background:none;</string>
+      </property>
+      <property name="title">
+       <string/>
+      </property>
+      <widget class="QLabel" name="noFlashLabelVideo">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>65</y>
+         <width>531</width>
+         <height>200</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>35</pointsize>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color:white;</string>
+       </property>
+       <property name="text">
+        <string>No Flash USB Detected!</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::AutoText</enum>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="usbImageLabelVideo">
+       <property name="geometry">
+        <rect>
+         <x>570</x>
+         <y>100</y>
+         <width>80</width>
+         <height>110</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">image: url(:/checkFlash/media/usb_icon.png);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="runningVideoGroup">
+      <property name="geometry">
+       <rect>
+        <x>55</x>
+        <y>20</y>
+        <width>880</width>
+        <height>400</height>
+       </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">color:white;</string>
+       <string notr="true">border:none;
+background:none;</string>
       </property>
-      <property name="text">
-       <string>FM</string>
+      <property name="title">
+       <string/>
       </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
+      <widget class="QLabel" name="runningVideoLabel">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>0</y>
+         <width>171</width>
+         <height>50</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>25</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color:white;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>Videos List</string>
+       </property>
+      </widget>
+      <widget class="QGroupBox" name="zeroVideosGroup">
+       <property name="geometry">
+        <rect>
+         <x>65</x>
+         <y>70</y>
+         <width>731</width>
+         <height>251</height>
+        </rect>
+       </property>
+       <property name="title">
+        <string/>
+       </property>
+       <widget class="QLabel" name="zeroVideosLabel">
+        <property name="geometry">
+         <rect>
+          <x>122</x>
+          <y>22</y>
+          <width>461</width>
+          <height>201</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>35</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color:white;</string>
+        </property>
+        <property name="text">
+         <string>No MP4 Files To Run</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="mp4ImageLabel">
+        <property name="geometry">
+         <rect>
+          <x>589</x>
+          <y>65</y>
+          <width>80</width>
+          <height>110</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">image: url(:/videoIcons/media/mp4_icon.png);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QListWidget" name="runningVideosList">
+       <property name="geometry">
+        <rect>
+         <x>5</x>
+         <y>50</y>
+         <width>870</width>
+         <height>250</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>20</pointsize>
+        </font>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="autoFillBackground">
+        <bool>true</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: transparent;
+color:white;</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="lineWidth">
+        <number>1</number>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="autoScrollMargin">
+        <number>16</number>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectItems</enum>
+       </property>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="musicPage">
@@ -997,7 +1189,7 @@ border-radius:50px;</string>
        </widget>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="noFlashGroup">
+     <widget class="QGroupBox" name="noFlashGroupMusic">
       <property name="enabled">
        <bool>true</bool>
       </property>
@@ -1016,7 +1208,7 @@ background:none;</string>
       <property name="title">
        <string/>
       </property>
-      <widget class="QLabel" name="noFlashLabel">
+      <widget class="QLabel" name="noFlashLabelMusic">
        <property name="geometry">
         <rect>
          <x>30</x>
@@ -1043,7 +1235,7 @@ background:none;</string>
         <set>Qt::AlignCenter</set>
        </property>
       </widget>
-      <widget class="QLabel" name="usbImageLabel">
+      <widget class="QLabel" name="usbImageLabelMusic">
        <property name="geometry">
         <rect>
          <x>570</x>
@@ -1192,6 +1384,45 @@ border-radius:80px;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="enableBluetoothButton">
+      <property name="geometry">
+       <rect>
+        <x>720</x>
+        <y>380</y>
+        <width>89</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Power ON</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="disableBluetoothButton">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>370</y>
+        <width>89</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Power OFF</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="connectedBluetoothDeviceLabel">
+      <property name="geometry">
+       <rect>
+        <x>420</x>
+        <y>370</y>
+        <width>171</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </widget>
@@ -1416,6 +1647,289 @@ border:none;</string>
        </property>
        <property name="calendarPopup">
         <bool>true</bool>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="videoShowPage">
+     <property name="styleSheet">
+      <string notr="true">background:none;</string>
+     </property>
+     <widget class="QGraphicsView" name="videoView">
+      <property name="geometry">
+       <rect>
+        <x>35</x>
+        <y>20</y>
+        <width>900</width>
+        <height>380</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background: transparent;</string>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContents</enum>
+      </property>
+      <property name="backgroundBrush">
+       <brush brushstyle="NoBrush">
+        <color alpha="255">
+         <red>0</red>
+         <green>0</green>
+         <blue>0</blue>
+        </color>
+       </brush>
+      </property>
+      <property name="sceneRect">
+       <rectf>
+        <x>0.000000000000000</x>
+        <y>0.000000000000000</y>
+        <width>880.000000000000000</width>
+        <height>380.000000000000000</height>
+       </rectf>
+      </property>
+     </widget>
+     <widget class="QGroupBox" name="runningVideoControlGroup">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>404</y>
+        <width>870</width>
+        <height>60</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border:none;</string>
+      </property>
+      <property name="title">
+       <string/>
+      </property>
+      <widget class="QPushButton" name="playVideoButton">
+       <property name="geometry">
+        <rect>
+         <x>470</x>
+         <y>10</y>
+         <width>40</width>
+         <height>40</height>
+        </rect>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border-radius:50px;
+border:none;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="forwardVideoButton">
+       <property name="geometry">
+        <rect>
+         <x>580</x>
+         <y>10</y>
+         <width>40</width>
+         <height>39</height>
+        </rect>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border:none;
+border-radius:50px;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="backwardVideoButton">
+       <property name="geometry">
+        <rect>
+         <x>250</x>
+         <y>10</y>
+         <width>40</width>
+         <height>40</height>
+        </rect>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border:none;
+border-radius:50px;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="stopVideoButton">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>10</y>
+         <width>40</width>
+         <height>40</height>
+        </rect>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border:none;
+border-radius:50px;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="volumeDownVideoButton">
+       <property name="geometry">
+        <rect>
+         <x>800</x>
+         <y>15</y>
+         <width>30</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border:none;
+border-radius:50px;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="volumeUpVideoButton">
+       <property name="geometry">
+        <rect>
+         <x>840</x>
+         <y>15</y>
+         <width>30</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="baseSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::NoFocus</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">border:none;
+border-radius:50px;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="autoDefault">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="goTovideosListButton">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>10</y>
+         <width>40</width>
+         <height>40</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string/>
        </property>
       </widget>
      </widget>

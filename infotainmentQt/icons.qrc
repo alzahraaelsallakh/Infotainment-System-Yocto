@@ -4,9 +4,9 @@
         <file>media/music_icon.png</file>
         <file>media/home_icon.png</file>
         <file>media/gps_icon.png</file>
-        <file>media/fm_icon.png</file>
         <file>media/calls_icon.png</file>
         <file>media/bluetooth_icon.png</file>
+        <file>media/video_icon.png</file>
     </qresource>
     <qresource prefix="/musicControl">
         <file>media/stop_icon.png</file>
@@ -21,10 +21,16 @@
         <file>media/repeatPressed_icon.png</file>
         <file>media/volumeUp_icon.png</file>
         <file>media/volumeDown_icon.png</file>
-        <file>media/musicRunning_icon.png</file>
     </qresource>
     <qresource prefix="/settingsIcons">
         <file>media/darkThemeOff_icon.png</file>
         <file>media/darkThemeOn_icon.png</file>
+    </qresource>
+    <qresource prefix="/bluetoothControl">
+        <file>media/bluetoothRunning_icon.png</file>
+    </qresource>
+    <qresource prefix="/videoIcons">
+        <file>media/mp4_icon.png</file>
+        <file>media/back_icon.png</file>
     </qresource>
 </RCC>
