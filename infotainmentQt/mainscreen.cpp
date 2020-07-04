@@ -86,16 +86,12 @@ mainScreen::mainScreen(QWidget *parent) :
     ui->pagesSwitch->setCurrentIndex(HOME_PAGE_INDEX);
 
     /* Connecting home buttons to goBackHomeFunction */
-//    connect(ui->homeButtonPh,SIGNAL(clicked()),SLOT(goBackHome()));
     connect(ui->homeButtonVd,SIGNAL(clicked()),SLOT(goBackHome()));
     connect(ui->homeButtonMs,SIGNAL(clicked()),SLOT(goBackHome()));
-//    connect(ui->homeButtonGp,SIGNAL(clicked()),SLOT(goBackHome()));
     connect(ui->homeButtonBl,SIGNAL(clicked()),SLOT(goBackHome()));
     connect(ui->homeButtonSt,SIGNAL(clicked()),SLOT(goBackHome()));
 
     /* Setting home buttons icons */
-//    ui->phoneButton->setIcon(QIcon(":/mainIcons/media/calls_icon.png"));
-//    ui->phoneButton->setIconSize(QSize(100,100));
 
     ui->videoButton->setIcon(QIcon(":/mainIcons/media/video_icon.png"));
     ui->videoButton->setIconSize(QSize(100,100));
@@ -103,23 +99,16 @@ mainScreen::mainScreen(QWidget *parent) :
     ui->musicButton->setIcon(QIcon(":/mainIcons/media/music_icon.png"));
     ui->musicButton->setIconSize(QSize(100,100));
 
-//    ui->gpsButton->setIcon(QIcon(":/mainIcons/media/gps_icon.png"));
-//    ui->gpsButton->setIconSize(QSize(100,100));
-
     ui->bluetoothButton->setIcon(QIcon(":/mainIcons/media/bluetooth_icon.png"));
     ui->bluetoothButton->setIconSize(QSize(100,100));
 
     ui->settingsButton->setIcon(QIcon(":/mainIcons/media/settings_icon.png"));
     ui->settingsButton->setIconSize(QSize(100,100));
 
-//    ui->homeButtonPh->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
-//    ui->homeButtonPh->setIconSize(QSize(50,50));
     ui->homeButtonVd->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
     ui->homeButtonVd->setIconSize(QSize(50,50));
     ui->homeButtonMs->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
     ui->homeButtonMs->setIconSize(QSize(50,50));
-//    ui->homeButtonGp->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
-//    ui->homeButtonGp->setIconSize(QSize(50,50));
     ui->homeButtonBl->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
     ui->homeButtonBl->setIconSize(QSize(50,50));
     ui->homeButtonSt->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
@@ -930,6 +919,7 @@ void mainScreen::enableBluetooth()
     const char *cmd;
     int systemStatus;
 
+
 #if USING_DEV == USING_PI
     enableBluetoothCMD = "bluetoothctl power on && bluetoothctl discoverable on && bluetoothctl pairable on && bluetoothctl agent NoInputNoOutput";
 #endif
@@ -937,7 +927,7 @@ void mainScreen::enableBluetooth()
     enableBluetoothCMD = "service bluetooth start && bt-agent --capability=NoInputNoOutput &";
 #endif
     cmd = enableBluetoothCMD.c_str();
-//    systemStatus = system (cmd);
+    systemStatus = system (cmd);
 }
 
 
@@ -992,8 +982,8 @@ void mainScreen::on_doneTimeDateButton_clicked()
     updatedTime = ui->updatedTimeValue->time().toString().toStdString();
     updatedDate = ui->updatedDateValue->date().toString("d MMM yyyy").toStdString();
 
-#if USING_DEV == USING_PI
-    updateTimeDateCMD = "date +%T -s '" + updatedDate + " " + updatedTime + "'";
+#if USING_DEV == USING_PC
+    updateTimeDateCMD = "date -s '" + updatedDate + " " + updatedTime + "'";
     cmd = updateTimeDateCMD.c_str();
     system(cmd);
 #endif

@@ -216,7 +216,7 @@ background:none;</string>
      <string notr="true"/>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="homePage">
      <widget class="QGroupBox" name="iconsGroup">
@@ -439,9 +439,9 @@ background:none;</string>
       <widget class="QLabel" name="noFlashLabelVideo">
        <property name="geometry">
         <rect>
-         <x>30</x>
+         <x>0</x>
          <y>65</y>
-         <width>531</width>
+         <width>561</width>
          <height>200</height>
         </rect>
        </property>
@@ -501,7 +501,7 @@ background:none;</string>
         <rect>
          <x>5</x>
          <y>0</y>
-         <width>171</width>
+         <width>211</width>
          <height>50</height>
         </rect>
        </property>
@@ -510,6 +510,7 @@ background:none;</string>
          <pointsize>25</pointsize>
          <weight>75</weight>
          <bold>true</bold>
+         <underline>true</underline>
         </font>
        </property>
        <property name="styleSheet">
@@ -715,7 +716,7 @@ color:white;</string>
         <rect>
          <x>5</x>
          <y>0</y>
-         <width>171</width>
+         <width>191</width>
          <height>50</height>
         </rect>
        </property>
@@ -724,6 +725,8 @@ color:white;</string>
          <pointsize>25</pointsize>
          <weight>75</weight>
          <bold>true</bold>
+         <underline>true</underline>
+         <kerning>true</kerning>
         </font>
        </property>
        <property name="styleSheet">
@@ -1102,9 +1105,9 @@ background:none;</string>
       <widget class="QLabel" name="noFlashLabelMusic">
        <property name="geometry">
         <rect>
-         <x>30</x>
+         <x>0</x>
          <y>65</y>
-         <width>531</width>
+         <width>561</width>
          <height>200</height>
         </rect>
        </property>
@@ -1297,7 +1300,7 @@ border:none;</string>
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>241</width>
+         <width>281</width>
          <height>50</height>
         </rect>
        </property>
@@ -1306,6 +1309,7 @@ border:none;</string>
          <pointsize>25</pointsize>
          <weight>75</weight>
          <bold>true</bold>
+         <underline>true</underline>
         </font>
        </property>
        <property name="styleSheet">
@@ -1406,7 +1410,7 @@ border:none;</string>
          <rect>
           <x>210</x>
           <y>10</y>
-          <width>120</width>
+          <width>131</width>
           <height>60</height>
          </rect>
         </property>
@@ -1424,7 +1428,7 @@ border:none;</string>
          <rect>
           <x>420</x>
           <y>10</y>
-          <width>230</width>
+          <width>251</width>
           <height>60</height>
          </rect>
         </property>
@@ -1485,7 +1489,7 @@ border:none;</string>
          <rect>
           <x>40</x>
           <y>20</y>
-          <width>240</width>
+          <width>281</width>
           <height>34</height>
          </rect>
         </property>
@@ -1531,7 +1535,7 @@ border:none;</string>
          <rect>
           <x>40</x>
           <y>80</y>
-          <width>161</width>
+          <width>181</width>
           <height>34</height>
          </rect>
         </property>
@@ -1551,9 +1555,9 @@ border:none;</string>
        <widget class="QPushButton" name="setTimeDateButton">
         <property name="geometry">
          <rect>
-          <x>530</x>
+          <x>479</x>
           <y>80</y>
-          <width>230</width>
+          <width>281</width>
           <height>34</height>
          </rect>
         </property>
