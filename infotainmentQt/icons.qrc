@@ -25,9 +25,12 @@
     <qresource prefix="/settingsIcons">
         <file>media/darkThemeOff_icon.png</file>
         <file>media/darkThemeOn_icon.png</file>
+        <file>media/cancel_icon.png</file>
+        <file>media/done_icon.png</file>
     </qresource>
     <qresource prefix="/bluetoothControl">
         <file>media/bluetoothRunning_icon.png</file>
+        <file>media/bluetoothMain.png</file>
     </qresource>
     <qresource prefix="/videoIcons">
         <file>media/mp4_icon.png</file>

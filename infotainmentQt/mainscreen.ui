@@ -168,10 +168,38 @@ background:none;</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">image:url(:/bluetoothControl/media/bluetoothRunning_icon.png);</string>
+      <string notr="true">image: url(:/mainIcons/media/bluetooth_icon.png);</string>
      </property>
      <property name="text">
       <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="mainLabel">
+     <property name="geometry">
+      <rect>
+       <x>454</x>
+       <y>7</y>
+       <width>81</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>151</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:white;</string>
+     </property>
+     <property name="text">
+      <string>STAY SAFE!</string>
      </property>
     </widget>
    </widget>
@@ -188,7 +216,7 @@ background:none;</string>
      <string notr="true"/>
     </property>
     <property name="currentIndex">
-     <number>7</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="homePage">
      <widget class="QGroupBox" name="iconsGroup">
@@ -207,45 +235,10 @@ background:none;</string>
       <property name="title">
        <string/>
       </property>
-      <widget class="QPushButton" name="phoneButton">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>60</y>
-         <width>100</width>
-         <height>100</height>
-        </rect>
-       </property>
-       <property name="baseSize">
-        <size>
-         <width>90</width>
-         <height>90</height>
-        </size>
-       </property>
-       <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">border:none;
-border-radius:50px;</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>100</width>
-         <height>100</height>
-        </size>
-       </property>
-       <property name="autoDefault">
-        <bool>true</bool>
-       </property>
-      </widget>
       <widget class="QPushButton" name="videoButton">
        <property name="geometry">
         <rect>
-         <x>350</x>
+         <x>200</x>
          <y>60</y>
          <width>100</width>
          <height>100</height>
@@ -280,43 +273,8 @@ border-radius:50px;</string>
       <widget class="QPushButton" name="musicButton">
        <property name="geometry">
         <rect>
-         <x>610</x>
+         <x>500</x>
          <y>60</y>
-         <width>100</width>
-         <height>100</height>
-        </rect>
-       </property>
-       <property name="baseSize">
-        <size>
-         <width>90</width>
-         <height>90</height>
-        </size>
-       </property>
-       <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">border:none;
-border-radius:50px;</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>100</width>
-         <height>100</height>
-        </size>
-       </property>
-       <property name="autoDefault">
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="gpsButton">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>250</y>
          <width>100</width>
          <height>100</height>
         </rect>
@@ -350,7 +308,7 @@ border-radius:50px;</string>
       <widget class="QPushButton" name="bluetoothButton">
        <property name="geometry">
         <rect>
-         <x>350</x>
+         <x>200</x>
          <y>250</y>
          <width>100</width>
          <height>100</height>
@@ -385,7 +343,7 @@ border-radius:50px;</string>
       <widget class="QPushButton" name="settingsButton">
        <property name="geometry">
         <rect>
-         <x>610</x>
+         <x>500</x>
          <y>250</y>
          <width>100</width>
          <height>100</height>
@@ -417,73 +375,6 @@ border-radius:50px;</string>
         <bool>true</bool>
        </property>
       </widget>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="phonePage">
-     <property name="styleSheet">
-      <string notr="true">background:none;
-</string>
-     </property>
-     <widget class="QPushButton" name="homeButtonPh">
-      <property name="geometry">
-       <rect>
-        <x>470</x>
-        <y>430</y>
-        <width>50</width>
-        <height>50</height>
-       </rect>
-      </property>
-      <property name="baseSize">
-       <size>
-        <width>50</width>
-        <height>50</height>
-       </size>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border:none;
-border-radius:80px;</string>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>100</width>
-        <height>100</height>
-       </size>
-      </property>
-      <property name="autoDefault">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QLabel" name="phoneLabel">
-      <property name="geometry">
-       <rect>
-        <x>210</x>
-        <y>60</y>
-        <width>571</width>
-        <height>291</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>62</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color:white;</string>
-      </property>
-      <property name="text">
-       <string>Phone</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="videoPage">
@@ -1253,73 +1144,6 @@ background:none;</string>
       </widget>
      </widget>
     </widget>
-    <widget class="QWidget" name="gpsPage">
-     <property name="styleSheet">
-      <string notr="true">background:none;
-</string>
-     </property>
-     <widget class="QPushButton" name="homeButtonGp">
-      <property name="geometry">
-       <rect>
-        <x>470</x>
-        <y>430</y>
-        <width>50</width>
-        <height>50</height>
-       </rect>
-      </property>
-      <property name="baseSize">
-       <size>
-        <width>50</width>
-        <height>50</height>
-       </size>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">border:none;
-border-radius:80px;</string>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>100</width>
-        <height>100</height>
-       </size>
-      </property>
-      <property name="autoDefault">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QLabel" name="gpsLabel">
-      <property name="geometry">
-       <rect>
-        <x>210</x>
-        <y>60</y>
-        <width>571</width>
-        <height>291</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>62</pointsize>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">color:white;</string>
-      </property>
-      <property name="text">
-       <string>GPS</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </widget>
     <widget class="QWidget" name="bluetoothPage">
      <property name="styleSheet">
       <string notr="true">background:none;
@@ -1377,52 +1201,38 @@ border-radius:80px;</string>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">color:white;</string>
+       <string notr="true">color:white;
+image: url(:/bluetoothControl/media/bluetoothMain.png);</string>
       </property>
       <property name="text">
-       <string>Bluetooth</string>
+       <string/>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QPushButton" name="enableBluetoothButton">
-      <property name="geometry">
-       <rect>
-        <x>720</x>
-        <y>380</y>
-        <width>89</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Power ON</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="disableBluetoothButton">
-      <property name="geometry">
-       <rect>
-        <x>200</x>
-        <y>370</y>
-        <width>89</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Power OFF</string>
-      </property>
-     </widget>
      <widget class="QLabel" name="connectedBluetoothDeviceLabel">
       <property name="geometry">
        <rect>
-        <x>420</x>
-        <y>370</y>
-        <width>171</width>
-        <height>41</height>
+        <x>231</x>
+        <y>338</y>
+        <width>530</width>
+        <height>30</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color:white;</string>
       </property>
       <property name="text">
        <string/>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </widget>
@@ -1485,7 +1295,7 @@ border:none;</string>
       <widget class="QLabel" name="settingsPanelLabel">
        <property name="geometry">
         <rect>
-         <x>5</x>
+         <x>0</x>
          <y>0</y>
          <width>241</width>
          <height>50</height>
@@ -1508,13 +1318,13 @@ border:none;</string>
         <string>Settings Panel</string>
        </property>
       </widget>
-      <widget class="QLabel" name="darkThemeLabel">
+      <widget class="QGroupBox" name="setTimeDateGroup">
        <property name="geometry">
         <rect>
-         <x>100</x>
-         <y>70</y>
-         <width>240</width>
-         <height>34</height>
+         <x>60</x>
+         <y>50</y>
+         <width>760</width>
+         <height>320</height>
         </rect>
        </property>
        <property name="font">
@@ -1523,132 +1333,246 @@ border:none;</string>
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">color:white;
-</string>
+        <string notr="true">color:white;</string>
        </property>
-       <property name="text">
-        <string>Enable Dark Theme</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="darkThemeButton">
-       <property name="geometry">
-        <rect>
-         <x>530</x>
-         <y>70</y>
-         <width>70</width>
-         <height>34</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>20</pointsize>
-        </font>
-       </property>
-       <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
-       </property>
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
-       <property name="text">
+       <property name="title">
         <string/>
        </property>
+       <widget class="QPushButton" name="doneTimeDateButton">
+        <property name="geometry">
+         <rect>
+          <x>430</x>
+          <y>270</y>
+          <width>50</width>
+          <height>50</height>
+         </rect>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>50</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>50</width>
+          <height>50</height>
+         </size>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="cancelTimeDateButton">
+        <property name="geometry">
+         <rect>
+          <x>280</x>
+          <y>270</y>
+          <width>50</width>
+          <height>50</height>
+         </rect>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>50</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>50</width>
+          <height>50</height>
+         </size>
+        </property>
+       </widget>
+       <widget class="QTimeEdit" name="updatedTimeValue">
+        <property name="geometry">
+         <rect>
+          <x>210</x>
+          <y>10</y>
+          <width>120</width>
+          <height>60</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>30</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color:black;</string>
+        </property>
+       </widget>
+       <widget class="QDateEdit" name="updatedDateValue">
+        <property name="geometry">
+         <rect>
+          <x>420</x>
+          <y>10</y>
+          <width>230</width>
+          <height>60</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>30</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color:black;</string>
+        </property>
+        <property name="calendarPopup">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="updateTimeDateLabel">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>115</y>
+          <width>100</width>
+          <height>110</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>25</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color:white;</string>
+        </property>
+        <property name="text">
+         <string>Time &amp; Date</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
       </widget>
-      <widget class="QLabel" name="setTimeLabel">
+      <widget class="QGroupBox" name="settingsMainGroup">
        <property name="geometry">
         <rect>
-         <x>100</x>
-         <y>129</y>
-         <width>107</width>
-         <height>34</height>
+         <x>60</x>
+         <y>50</y>
+         <width>760</width>
+         <height>320</height>
         </rect>
        </property>
-       <property name="font">
-        <font>
-         <pointsize>20</pointsize>
-        </font>
+       <property name="title">
+        <string/>
        </property>
-       <property name="styleSheet">
-        <string notr="true">color:white;
+       <widget class="QLabel" name="darkThemeLabel">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>20</y>
+          <width>240</width>
+          <height>34</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>20</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color:white;
 </string>
-       </property>
-       <property name="text">
-        <string>Set Time</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="setDateLabel">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>188</y>
-         <width>106</width>
-         <height>34</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>20</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">color:white;
+        </property>
+        <property name="text">
+         <string>Enable Dark Theme</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="darkThemeButton">
+        <property name="geometry">
+         <rect>
+          <x>550</x>
+          <y>20</y>
+          <width>70</width>
+          <height>34</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>20</pointsize>
+         </font>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+       <widget class="QLabel" name="setTimeDateLabel">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>80</y>
+          <width>161</width>
+          <height>34</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>20</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color:white;
 </string>
-       </property>
-       <property name="text">
-        <string>Set Date</string>
-       </property>
+        </property>
+        <property name="text">
+         <string>Time &amp; Date</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="setTimeDateButton">
+        <property name="geometry">
+         <rect>
+          <x>530</x>
+          <y>80</y>
+          <width>230</width>
+          <height>34</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color:white;</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
       </widget>
-      <widget class="QTimeEdit" name="timeEditButton">
-       <property name="geometry">
-        <rect>
-         <x>530</x>
-         <y>129</y>
-         <width>70</width>
-         <height>34</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>14</pointsize>
-        </font>
-       </property>
-       <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::PlusMinus</enum>
-       </property>
-       <property name="accelerated">
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QDateEdit" name="dateEditButton">
-       <property name="geometry">
-        <rect>
-         <x>530</x>
-         <y>188</y>
-         <width>121</width>
-         <height>34</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>14</pointsize>
-        </font>
-       </property>
-       <property name="mouseTracking">
-        <bool>false</bool>
-       </property>
-       <property name="tabletTracking">
-        <bool>false</bool>
-       </property>
-       <property name="buttonSymbols">
-        <enum>QAbstractSpinBox::PlusMinus</enum>
-       </property>
-       <property name="accelerated">
-        <bool>false</bool>
-       </property>
-       <property name="calendarPopup">
-        <bool>true</bool>
-       </property>
-      </widget>
+      <zorder>settingsPanelLabel</zorder>
+      <zorder>settingsMainGroup</zorder>
+      <zorder>setTimeDateGroup</zorder>
      </widget>
     </widget>
     <widget class="QWidget" name="videoShowPage">

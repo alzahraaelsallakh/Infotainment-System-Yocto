@@ -1,7 +1,6 @@
 #include "mainscreen.h"
 #include "ui_mainscreen.h"
 #include "systeminterface.h"
-#include <bits/stdc++.h>
 
 
 #include <iostream>
@@ -20,13 +19,11 @@ using namespace std;
 
 /* Stack widget pages for main screen */
 #define HOME_PAGE_INDEX 0
-#define PHONE_PAGE_INDEX 1
-#define VIDEO_PAGE_INDEX 2
-#define MUSIC_PAGE_INDEX 3
-#define GPS_PAGE_INDEX 4
-#define BLUETOOTH_PAGE_INDEX 5
-#define SETTINGS_PAGE_INDEX 6
-#define VIDEO_SHOW_PAGE 7
+#define VIDEO_PAGE_INDEX 1
+#define MUSIC_PAGE_INDEX 2
+#define BLUETOOTH_PAGE_INDEX 3
+#define SETTINGS_PAGE_INDEX 4
+#define VIDEO_SHOW_PAGE 5
 
 /* Music Macros */
 #define NO_FLASH_DETECTED   0
@@ -34,14 +31,17 @@ using namespace std;
 #define MAX_VOLUME          100
 #define MIN_VOLUME          0
 
+
+/* Bluetooth Macros */
+#define BLUETOOTH_CONNECTED 1
+#define BLUETOOTH_NOT_CONNECTED 2
+
 /* Music variables */
 int flashStatus = NO_FLASH_DETECTED;
 string usbName, usbPath;
 string songsExt = ".mp3";
-
 int playingSongFlag = 0;
 int currentVolume = 50;
-
 
 /* Video variables */
 string videosExt = ".mp4";
@@ -51,11 +51,14 @@ long long int videoStep = 10000;
 /* Multimedia variables */
 int volumeStep = 10;
 
+/* Bluetooth variables */
+int bluetoothDeviceConnected = BLUETOOTH_NOT_CONNECTED;
 
 /* System Functions */
 
 int mountUSB (void);
 int unmountUSB(void);
+void enablePulseAudio(void);
 
 
 
@@ -75,20 +78,24 @@ mainScreen::mainScreen(QWidget *parent) :
     connect(flashDetectionTimer,SIGNAL(timeout()),this,SLOT(updateFlashStatus()));
     flashDetectionTimer->start();
 
+
+    /* Enable audio daemon */
+    enablePulseAudio();
+
     /* Setting home page as default page */
     ui->pagesSwitch->setCurrentIndex(HOME_PAGE_INDEX);
 
     /* Connecting home buttons to goBackHomeFunction */
-    connect(ui->homeButtonPh,SIGNAL(clicked()),SLOT(goBackHome()));
+//    connect(ui->homeButtonPh,SIGNAL(clicked()),SLOT(goBackHome()));
     connect(ui->homeButtonVd,SIGNAL(clicked()),SLOT(goBackHome()));
     connect(ui->homeButtonMs,SIGNAL(clicked()),SLOT(goBackHome()));
-    connect(ui->homeButtonGp,SIGNAL(clicked()),SLOT(goBackHome()));
+//    connect(ui->homeButtonGp,SIGNAL(clicked()),SLOT(goBackHome()));
     connect(ui->homeButtonBl,SIGNAL(clicked()),SLOT(goBackHome()));
     connect(ui->homeButtonSt,SIGNAL(clicked()),SLOT(goBackHome()));
 
     /* Setting home buttons icons */
-    ui->phoneButton->setIcon(QIcon(":/mainIcons/media/calls_icon.png"));
-    ui->phoneButton->setIconSize(QSize(100,100));
+//    ui->phoneButton->setIcon(QIcon(":/mainIcons/media/calls_icon.png"));
+//    ui->phoneButton->setIconSize(QSize(100,100));
 
     ui->videoButton->setIcon(QIcon(":/mainIcons/media/video_icon.png"));
     ui->videoButton->setIconSize(QSize(100,100));
@@ -96,8 +103,8 @@ mainScreen::mainScreen(QWidget *parent) :
     ui->musicButton->setIcon(QIcon(":/mainIcons/media/music_icon.png"));
     ui->musicButton->setIconSize(QSize(100,100));
 
-    ui->gpsButton->setIcon(QIcon(":/mainIcons/media/gps_icon.png"));
-    ui->gpsButton->setIconSize(QSize(100,100));
+//    ui->gpsButton->setIcon(QIcon(":/mainIcons/media/gps_icon.png"));
+//    ui->gpsButton->setIconSize(QSize(100,100));
 
     ui->bluetoothButton->setIcon(QIcon(":/mainIcons/media/bluetooth_icon.png"));
     ui->bluetoothButton->setIconSize(QSize(100,100));
@@ -105,14 +112,14 @@ mainScreen::mainScreen(QWidget *parent) :
     ui->settingsButton->setIcon(QIcon(":/mainIcons/media/settings_icon.png"));
     ui->settingsButton->setIconSize(QSize(100,100));
 
-    ui->homeButtonPh->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
-    ui->homeButtonPh->setIconSize(QSize(50,50));
+//    ui->homeButtonPh->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
+//    ui->homeButtonPh->setIconSize(QSize(50,50));
     ui->homeButtonVd->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
     ui->homeButtonVd->setIconSize(QSize(50,50));
     ui->homeButtonMs->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
     ui->homeButtonMs->setIconSize(QSize(50,50));
-    ui->homeButtonGp->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
-    ui->homeButtonGp->setIconSize(QSize(50,50));
+//    ui->homeButtonGp->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
+//    ui->homeButtonGp->setIconSize(QSize(50,50));
     ui->homeButtonBl->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
     ui->homeButtonBl->setIconSize(QSize(50,50));
     ui->homeButtonSt->setIcon(QIcon(":/mainIcons/media/home_icon.png"));
@@ -175,9 +182,22 @@ mainScreen::mainScreen(QWidget *parent) :
     /* Settings buttons icons */
     ui->darkThemeButton->setIcon(QIcon(":/settingsIcons/media/darkThemeOff_icon.png"));
     ui->darkThemeButton->setIconSize(QSize(70,34));
+    ui->doneTimeDateButton->setIcon(QIcon(":/settingsIcons/media/done_icon.png"));
+    ui->doneTimeDateButton->setIconSize(QSize(50,50));
+    ui->cancelTimeDateButton->setIcon(QIcon(":/settingsIcons/media/cancel_icon.png"));
+    ui->cancelTimeDateButton->setIconSize(QSize(50,50));
+
+    ui->setTimeDateGroup->hide();
+    ui->settingsMainGroup->show();
 
     /* Bluetooth setup */
     ui->bluetoothIconLabel->hide();
+    enableBluetooth();
+
+    /* Check bluetooth connections */
+    bluetoothDetectionTimer = new QTimer(this);
+    connect(bluetoothDetectionTimer,SIGNAL(timeout()),this,SLOT(updatBluetoothDevices()));
+    bluetoothDetectionTimer->start();
 
 }
 
@@ -206,6 +226,8 @@ void mainScreen::updateTime()
     time = currentTime.toString("hh:mm AP");
     ui->timeText->setText(time);
     ui->timeText->setAlignment(Qt::AlignRight);
+
+    ui->setTimeDateButton->setText(time + ", " + date);
 
 }
 
@@ -239,6 +261,15 @@ int unmountUSB ()
 
     cmd = umountCMD.c_str();
     return system (cmd);
+}
+
+void enablePulseAudio()
+{
+    const char *cmd;
+    string enablePulseAudioCMD = "pulseaudio -D 2> /dev/null";
+
+    cmd = enablePulseAudioCMD.c_str();
+    system(cmd);
 }
 
 /* Flash status updating method */
@@ -282,8 +313,11 @@ void mainScreen::updateFlashStatus()
 
         }
         ui->noFlashGroupMusic->hide();
+        ui->noFlashGroupVideo->hide();
         ui->runningMusicGroup->show();
+        ui->runningVideoGroup->show();
         updateSongsList();
+        updateVideosList();
 
 
 #endif
@@ -318,6 +352,7 @@ void mainScreen::updateFlashStatus()
                 ui->runningMusicGroup->hide();
                 ui->noFlashGroupMusic->show();
                 updateSongsList();
+                updateVideosList();
             }
         }
 
@@ -340,6 +375,7 @@ void mainScreen::updateFlashStatus()
         ui->noFlashGroupMusic->show();
         ui->noFlashGroupVideo->show();
     }
+
 
     if (playingSongFlag == 1)
     {
@@ -453,8 +489,7 @@ void mainScreen::onSongChange()
     {
         ui->runningSongsList->item(songIndex)->setSelected(true);
         ui->runningSongsList->scrollToItem(ui->runningSongsList->item(songIndex),QAbstractItemView::EnsureVisible);
-
-        ui->currentRunningMediaLabel->setText(ui->runningSongsList->item(songIndex)->text());
+        ui->currentRunningMediaLabel->setText(ui->runningSongsList->item(playList->currentIndex())->text());
     }
 
 
@@ -463,6 +498,8 @@ void mainScreen::onSongChange()
 void mainScreen::playSong()
 {
     playingSongFlag = 1;
+
+    ui->currentRunningMediaLabel->setText(ui->runningSongsList->item(playList->currentIndex())->text());
 
     musicPlayer->play();
     ui->playButton->setIcon(QIcon(":/musicControl/media/pause_icon.png"));
@@ -608,12 +645,12 @@ void mainScreen::on_volumeUpButton_clicked()
 /*************************************************    Phone Methods    *******************************************************/
 /*****************************************************************************************************************************/
 
-
+#if 0
 void mainScreen::on_phoneButton_clicked()
 {
     ui->pagesSwitch->setCurrentIndex(PHONE_PAGE_INDEX);
 }
-
+#endif
 
 /*****************************************************************************************************************************/
 /************************************************    Video Methods    *****************************************************/
@@ -622,6 +659,7 @@ void mainScreen::on_phoneButton_clicked()
 void mainScreen::on_videoButton_clicked()
 {
     ui->pagesSwitch->setCurrentIndex(VIDEO_PAGE_INDEX);
+
 }
 
 void mainScreen::updateVideosList()
@@ -644,6 +682,7 @@ void mainScreen::updateVideosList()
     {
         listingVideosNumCMD = "ls " + usbPath + " | grep " + videosExt + " | wc -l";
         videosListCount = GetStdoutFromCommand(listingVideosNumCMD);
+
 
         if (videosListCount == "0")
         {
@@ -732,7 +771,7 @@ void mainScreen::on_goTovideosListButton_clicked()
 {
     /* Stop any running video first */
 
-    videoPlayer->pause();
+    stopVideo();
 
     ui->pagesSwitch->setCurrentIndex(VIDEO_PAGE_INDEX);
 }
@@ -821,10 +860,12 @@ void mainScreen::on_volumeUpVideoButton_clicked()
 /*****************************************************************************************************************************/
 
 
+#if 0
 void mainScreen::on_gpsButton_clicked()
 {
     ui->pagesSwitch->setCurrentIndex(GPS_PAGE_INDEX);
 }
+#endif
 
 
 /*****************************************************************************************************************************/
@@ -837,38 +878,68 @@ void mainScreen::on_bluetoothButton_clicked()
 
 }
 
-void mainScreen::on_enableBluetoothButton_clicked()
+void mainScreen::updatBluetoothDevices()
+{
+    string listConnectedDevicesCMD, getDeviceNameCMD;
+    string listConnectedDevices, deviceAddress,deviceName, zeroConnectedDevices;
+    int start = 0, end;
+    regex macRegex("[a-fA-F0-9:]{17}|[a-fA-F0-9]{12}");
+    smatch macMatch;
+
+
+    listConnectedDevicesCMD = "hcitool con";
+
+    listConnectedDevices = GetStdoutFromCommand (listConnectedDevicesCMD);
+
+    end = listConnectedDevices.find(":",start);
+
+    if (end == (listConnectedDevices.length()-1))
+    {
+        /* No bluetooth devices are connected */
+        bluetoothDeviceConnected = BLUETOOTH_NOT_CONNECTED;
+
+        zeroConnectedDevices = "Connect Your Device!";
+
+        ui->connectedBluetoothDeviceLabel->setText(QString::fromStdString(zeroConnectedDevices));
+        ui->bluetoothIconLabel->hide();
+    }
+    else if (end != (listConnectedDevices.length()-1) && bluetoothDeviceConnected == BLUETOOTH_NOT_CONNECTED)
+    {
+        bluetoothDeviceConnected = BLUETOOTH_CONNECTED;
+        regex_search(listConnectedDevices, macMatch, macRegex);
+
+        for (auto x : macMatch)
+            deviceAddress = x ;
+
+        getDeviceNameCMD = "hcitool name " + deviceAddress;
+        deviceName = GetStdoutFromCommand(getDeviceNameCMD);
+        deviceName = "Connected Device: " + deviceName;
+        ui->connectedBluetoothDeviceLabel->setText(QString::fromStdString(deviceName));
+        ui->bluetoothIconLabel->show();
+    }
+    else
+    {
+        /* Do nothing */
+    }
+
+}
+
+void mainScreen::enableBluetooth()
 {
     string enableBluetoothCMD;
     const char *cmd;
     int systemStatus;
 
+#if USING_DEV == USING_PI
     enableBluetoothCMD = "bluetoothctl power on && bluetoothctl discoverable on && bluetoothctl pairable on && bluetoothctl agent NoInputNoOutput";
-
+#endif
+#if USING_DEV == USING_PC
+    enableBluetoothCMD = "service bluetooth start && bt-agent --capability=NoInputNoOutput &";
+#endif
     cmd = enableBluetoothCMD.c_str();
-    systemStatus = system (cmd);
-    if (systemStatus == COMMAND_SUCCEDED)
-    {
-        ui->bluetoothIconLabel->show();
-    }
-
+//    systemStatus = system (cmd);
 }
 
-void mainScreen::on_disableBluetoothButton_clicked()
-{
-    string disableBluetoothCMD;
-    const char *cmd;
-    int systemStatus;
-
-    disableBluetoothCMD = "bluetoothctl power off";
-
-    cmd = disableBluetoothCMD.c_str();
-    systemStatus = system(cmd);
-    if (systemStatus == COMMAND_SUCCEDED)
-    {
-        ui->bluetoothIconLabel->hide();
-    }
-}
 
 
 
@@ -878,6 +949,9 @@ void mainScreen::on_disableBluetoothButton_clicked()
 
 void mainScreen::on_settingsButton_clicked()
 {
+    ui->setTimeDateGroup->hide();
+    ui->settingsMainGroup->show();
+
     ui->pagesSwitch->setCurrentIndex(SETTINGS_PAGE_INDEX);
 }
 
@@ -902,6 +976,37 @@ void mainScreen::on_darkThemeButton_clicked()
 }
 
 
+void mainScreen::on_setTimeDateButton_clicked()
+{
+    ui->settingsMainGroup->hide();
+    ui->setTimeDateGroup->show();
+}
+
+void mainScreen::on_doneTimeDateButton_clicked()
+{
+    string updatedTime, updatedDate;
+    string updateTimeDateCMD;
+    const char *cmd;
+
+
+    updatedTime = ui->updatedTimeValue->time().toString().toStdString();
+    updatedDate = ui->updatedDateValue->date().toString("d MMM yyyy").toStdString();
+
+#if USING_DEV == USING_PI
+    updateTimeDateCMD = "date +%T -s '" + updatedDate + " " + updatedTime + "'";
+    cmd = updateTimeDateCMD.c_str();
+    system(cmd);
+#endif
+
+    ui->setTimeDateGroup->hide();
+    ui->settingsMainGroup->show();
 
 
 
+}
+
+void mainScreen::on_cancelTimeDateButton_clicked()
+{
+    ui->setTimeDateGroup->hide();
+    ui->settingsMainGroup->show();
+}

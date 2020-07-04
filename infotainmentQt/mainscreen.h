@@ -28,6 +28,8 @@
 #include <QGraphicsVideoItem>
 
 #include <unistd.h>
+#include <bits/stdc++.h>
+#include <regex>
 
 
 namespace Ui {
@@ -45,6 +47,8 @@ public:
 
     QTimer *flashDetectionTimer;
 
+    QTimer * bluetoothDetectionTimer;
+
     QDate currentDate;
     QString date;
     QTime currentTime;
@@ -61,13 +65,13 @@ public:
     ~mainScreen();
 
 private slots:
-    void on_phoneButton_clicked();
+//    void on_phoneButton_clicked();
 
     void on_videoButton_clicked();
 
     void on_musicButton_clicked();
 
-    void on_gpsButton_clicked();
+//    void on_gpsButton_clicked();
 
     void on_bluetoothButton_clicked();
 
@@ -78,6 +82,8 @@ private slots:
     void updateTime();
 
     void updateFlashStatus();
+
+    void updatBluetoothDevices();
 
     void updateSongsList();
 
@@ -109,10 +115,6 @@ private slots:
 
     void on_darkThemeButton_clicked();
 
-    void on_enableBluetoothButton_clicked();
-
-    void on_disableBluetoothButton_clicked();
-
     void on_goTovideosListButton_clicked();
 
     void onVideoListItemClicked(QListWidgetItem* item);
@@ -132,6 +134,14 @@ private slots:
     void playVideo();
 
     void stopVideo();
+
+    void enableBluetooth();
+
+    void on_setTimeDateButton_clicked();
+
+    void on_doneTimeDateButton_clicked();
+
+    void on_cancelTimeDateButton_clicked();
 
 private:
     Ui::mainScreen *ui;
