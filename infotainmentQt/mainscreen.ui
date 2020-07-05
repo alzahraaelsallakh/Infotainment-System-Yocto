@@ -216,7 +216,7 @@ background:none;</string>
      <string notr="true"/>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="homePage">
      <widget class="QGroupBox" name="iconsGroup">
@@ -1410,7 +1410,7 @@ border:none;</string>
          <rect>
           <x>210</x>
           <y>10</y>
-          <width>131</width>
+          <width>121</width>
           <height>60</height>
          </rect>
         </property>
@@ -1421,6 +1421,12 @@ border:none;</string>
         </property>
         <property name="styleSheet">
          <string notr="true">color:black;</string>
+        </property>
+        <property name="showGroupSeparator" stdset="0">
+         <bool>false</bool>
+        </property>
+        <property name="currentSection">
+         <enum>QDateTimeEdit::HourSection</enum>
         </property>
        </widget>
        <widget class="QDateEdit" name="updatedDateValue">
@@ -1442,6 +1448,13 @@ border:none;</string>
         </property>
         <property name="calendarPopup">
          <bool>true</bool>
+        </property>
+        <property name="date">
+         <date>
+          <year>2020</year>
+          <month>1</month>
+          <day>1</day>
+         </date>
         </property>
        </widget>
        <widget class="QLabel" name="updateTimeDateLabel">

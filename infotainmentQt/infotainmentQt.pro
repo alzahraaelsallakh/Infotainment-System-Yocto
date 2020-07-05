@@ -35,7 +35,9 @@ SOURCES += \
 
 HEADERS += \
         mainscreen.h \
-    systeminterface.h
+    systeminterface.h \
+    availabletargets.h \
+    targetconfiguration.h
 
 FORMS += \
         mainscreen.ui

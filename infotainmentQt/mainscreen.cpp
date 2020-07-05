@@ -2,16 +2,8 @@
 #include "ui_mainscreen.h"
 #include "systeminterface.h"
 
-
-#include <iostream>
-using namespace std;
-#include <typeinfo>
-#include <QDebug>
-
-
-#define USING_PC    1
-#define USING_PI    2
-#define USING_DEV   USING_PC
+#include "availabletargets.h"
+#include "targetconfiguration.h"
 
 
 /* System Macros */
@@ -25,7 +17,7 @@ using namespace std;
 #define SETTINGS_PAGE_INDEX 4
 #define VIDEO_SHOW_PAGE 5
 
-/* Music Macros */
+/* Multimedia Macros */
 #define NO_FLASH_DETECTED   0
 #define FLASH_DETECTED      1
 #define MAX_VOLUME          100
@@ -36,29 +28,31 @@ using namespace std;
 #define BLUETOOTH_CONNECTED 1
 #define BLUETOOTH_NOT_CONNECTED 2
 
-/* Music variables */
+/* General variables */
+int currentVolume = 50;
+
+/* Multimedia variables */
+int volumeStep = 10;
 int flashStatus = NO_FLASH_DETECTED;
 string usbName, usbPath;
+
+/* Music variables */
 string songsExt = ".mp3";
 int playingSongFlag = 0;
-int currentVolume = 50;
 
 /* Video variables */
 string videosExt = ".mp4";
 int playingVideoFlag = 0;
 long long int videoStep = 10000;
 
-/* Multimedia variables */
-int volumeStep = 10;
-
 /* Bluetooth variables */
 int bluetoothDeviceConnected = BLUETOOTH_NOT_CONNECTED;
 
 /* System Functions */
-
 int mountUSB (void);
 int unmountUSB(void);
-void enablePulseAudio(void);
+void initialCommands(void);
+string extractUsb (string devices);
 
 
 
@@ -79,8 +73,8 @@ mainScreen::mainScreen(QWidget *parent) :
     flashDetectionTimer->start();
 
 
-    /* Enable audio daemon */
-    enablePulseAudio();
+    /* Enable required initial daemons */
+    initialCommands();
 
     /* Setting home page as default page */
     ui->pagesSwitch->setCurrentIndex(HOME_PAGE_INDEX);
@@ -203,6 +197,74 @@ mainScreen::~mainScreen()
 /*****************************************************************************************************************************/
 
 
+void initialCommands()
+{
+    const char *cmd;
+
+    string enablePulseAudioCMD = "pulseaudio -D 2> /dev/null";
+    cmd = enablePulseAudioCMD.c_str();
+    system(cmd);
+
+    string unblockBluetoothCMD = "rfkill unblock bluetooth";
+    cmd = unblockBluetoothCMD.c_str();
+    system(cmd);
+}
+
+int mountUSB ()
+{
+    const char *cmd;
+    string mountCMD;
+
+    mountCMD = "mount /dev/" + usbName + " /media/" + usbName;
+
+    cmd = mountCMD.c_str();
+    return system (cmd);
+}
+
+int unmountUSB ()
+{
+    const char *cmd;
+    string umountCMD, forceUnmountCMD;
+    int systemStatus;
+
+    umountCMD = "umount /media/" + usbName;
+    forceUnmountCMD = "umount -l /media/" + usbName;
+
+    cmd = umountCMD.c_str();
+    systemStatus = system(cmd);
+    if (systemStatus != COMMAND_SUCCEDED)
+    {
+        cmd = forceUnmountCMD.c_str();
+        systemStatus = system(cmd);
+    }
+    return systemStatus;
+}
+
+string extractUsb(string devices)
+{
+    string dev,devType;
+    string checkDevTypeCMD;
+    int start, devNameLen;
+
+    devNameLen = 4;
+    start = 0;
+
+    while (start<devices.length())
+    {
+        dev = devices.substr(start,devNameLen);
+
+        checkDevTypeCMD = "udevadm info --query=all --name=" +dev + " | grep usb";
+        devType = GetStdoutFromCommand(checkDevTypeCMD);
+        if (devType.length()!=0)
+        {
+            return dev;
+        }
+
+        start = start + devNameLen;
+    }
+    return devType;
+}
+
 /* Time and date updating method */
 void mainScreen::updateTime()
 {
@@ -230,54 +292,24 @@ void mainScreen::goBackHome (void)
 /**********************************************    Multimedia Methods    *****************************************************/
 /*****************************************************************************************************************************/
 
-int mountUSB (void)
-{
-    const char *cmd;
-    string mountCMD;
-
-    mountCMD = "mount /dev/" + usbName + " /media/" + usbName;
-
-    cmd = mountCMD.c_str();
-    return system (cmd);
-}
-
-int unmountUSB ()
-{
-    const char *cmd;
-    string umountCMD;
-
-    umountCMD = "umount /media/" + usbName;
-
-    cmd = umountCMD.c_str();
-    return system (cmd);
-}
-
-void enablePulseAudio()
-{
-    const char *cmd;
-    string enablePulseAudioCMD = "pulseaudio -D 2> /dev/null";
-
-    cmd = enablePulseAudioCMD.c_str();
-    system(cmd);
-}
 
 /* Flash status updating method */
 void mainScreen::updateFlashStatus()
 {
     int systemStatus;
-    string listDevicesCMD, mkdirCMD, mountCMD,rmdirCMD,umountCMD;
+    string listDevicesCMD, mkdirCMD, rmdirCMD;
     string devicesConnected;
     const char *cmd;
 
     /* Check if any flash usb is connected */
-#if USING_DEV == USING_PC
-    listDevicesCMD = "ls /dev/ | grep sdb[0-9]";
-#endif
-#if USING_DEV == USING_PI
+
     listDevicesCMD = "ls /dev/ | grep sd[a-z][0-9]";
-#endif
 
     devicesConnected = GetStdoutFromCommand(listDevicesCMD);
+
+#if TARGET_DEV == DEV_PC
+    devicesConnected = extractUsb(devicesConnected);
+#endif
 
     /* New usb is connected */
     if (!devicesConnected.empty() && flashStatus == NO_FLASH_DETECTED)
@@ -285,7 +317,6 @@ void mainScreen::updateFlashStatus()
         flashStatus = FLASH_DETECTED;
         usbName = devicesConnected;
 
-#if USING_DEV == USING_PI
 
         usbPath = "/media/" + usbName + "/";
 
@@ -298,20 +329,11 @@ void mainScreen::updateFlashStatus()
         if (mountUSB() != COMMAND_SUCCEDED)
         {
             unmountUSB();
+            rmdirCMD = "rmdir /media/" + usbName;
+            cmd = rmdirCMD.c_str();
+            systemStatus = system (cmd);
             mountUSB();
-
         }
-        ui->noFlashGroupMusic->hide();
-        ui->noFlashGroupVideo->hide();
-        ui->runningMusicGroup->show();
-        ui->runningVideoGroup->show();
-        updateSongsList();
-        updateVideosList();
-
-
-#endif
-#if USING_DEV == USING_PC
-        usbPath = "/media/Stuff/" + usbName + "/" ;
 
         ui->noFlashGroupMusic->hide();
         ui->noFlashGroupVideo->hide();
@@ -319,7 +341,7 @@ void mainScreen::updateFlashStatus()
         ui->runningVideoGroup->show();
         updateSongsList();
         updateVideosList();
-#endif
+
 
     }
     /* Current usb is removed */
@@ -327,7 +349,6 @@ void mainScreen::updateFlashStatus()
     {
         flashStatus = NO_FLASH_DETECTED;
 
-#if USING_DEV == USING_PI
         /* Unmounting usb device */
 
         if (unmountUSB() == COMMAND_SUCCEDED)
@@ -345,15 +366,6 @@ void mainScreen::updateFlashStatus()
             }
         }
 
-#endif
-#if USING_DEV == USING_PC
-        ui->runningMusicGroup->hide();
-        ui->runningVideoGroup->hide();
-        ui->noFlashGroupMusic->show();
-        ui->noFlashGroupVideo->show();
-        updateSongsList();
-        updateVideosList();
-#endif
 
     }
     /* No usb is connected */
@@ -629,18 +641,6 @@ void mainScreen::on_volumeUpButton_clicked()
 }
 
 
-
-/*****************************************************************************************************************************/
-/*************************************************    Phone Methods    *******************************************************/
-/*****************************************************************************************************************************/
-
-#if 0
-void mainScreen::on_phoneButton_clicked()
-{
-    ui->pagesSwitch->setCurrentIndex(PHONE_PAGE_INDEX);
-}
-#endif
-
 /*****************************************************************************************************************************/
 /************************************************    Video Methods    *****************************************************/
 /*****************************************************************************************************************************/
@@ -845,19 +845,6 @@ void mainScreen::on_volumeUpVideoButton_clicked()
 
 
 /*****************************************************************************************************************************/
-/**************************************************    GPS Methods    ********************************************************/
-/*****************************************************************************************************************************/
-
-
-#if 0
-void mainScreen::on_gpsButton_clicked()
-{
-    ui->pagesSwitch->setCurrentIndex(GPS_PAGE_INDEX);
-}
-#endif
-
-
-/*****************************************************************************************************************************/
 /************************************************    Bluetooth Methods    *****************************************************/
 /*****************************************************************************************************************************/
 
@@ -920,17 +907,15 @@ void mainScreen::enableBluetooth()
     int systemStatus;
 
 
-#if USING_DEV == USING_PI
+#if TARGET_DEV == DEV_RPI
     enableBluetoothCMD = "bluetoothctl power on && bluetoothctl discoverable on && bluetoothctl pairable on && bluetoothctl agent NoInputNoOutput";
 #endif
-#if USING_DEV == USING_PC
-    enableBluetoothCMD = "service bluetooth start && bt-agent --capability=NoInputNoOutput &";
+#if TARGET_DEV == DEV_PC
+    enableBluetoothCMD = "service bluetooth start && bt-agent --capability=NoInputNoOutput > /dev/null &";
 #endif
     cmd = enableBluetoothCMD.c_str();
     systemStatus = system (cmd);
 }
-
-
 
 
 /*****************************************************************************************************************************/
@@ -944,7 +929,6 @@ void mainScreen::on_settingsButton_clicked()
 
     ui->pagesSwitch->setCurrentIndex(SETTINGS_PAGE_INDEX);
 }
-
 
 void mainScreen::on_darkThemeButton_clicked()
 {
@@ -965,7 +949,6 @@ void mainScreen::on_darkThemeButton_clicked()
     }
 }
 
-
 void mainScreen::on_setTimeDateButton_clicked()
 {
     ui->settingsMainGroup->hide();
@@ -982,7 +965,7 @@ void mainScreen::on_doneTimeDateButton_clicked()
     updatedTime = ui->updatedTimeValue->time().toString().toStdString();
     updatedDate = ui->updatedDateValue->date().toString("d MMM yyyy").toStdString();
 
-#if USING_DEV == USING_PC
+#if TARGET_DEV == DEV_PC
     updateTimeDateCMD = "date -s '" + updatedDate + " " + updatedTime + "'";
     cmd = updateTimeDateCMD.c_str();
     system(cmd);

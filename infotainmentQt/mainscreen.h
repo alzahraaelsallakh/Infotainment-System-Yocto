@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+
 /* Time & Date inclusions */
 #include <QTimer>
 #include <QDate>
@@ -21,7 +22,6 @@
 #include <QDir>
 #include <QUrl>
 
-
 /* MP4 inclusions */
 #include <QRectF>
 #include <QGraphicsScene>
@@ -30,6 +30,11 @@
 #include <unistd.h>
 #include <bits/stdc++.h>
 #include <regex>
+
+#include <iostream>
+using namespace std;
+#include <typeinfo>
+#include <QDebug>
 
 
 namespace Ui {
@@ -65,13 +70,10 @@ public:
     ~mainScreen();
 
 private slots:
-//    void on_phoneButton_clicked();
 
     void on_videoButton_clicked();
 
     void on_musicButton_clicked();
-
-//    void on_gpsButton_clicked();
 
     void on_bluetoothButton_clicked();
 
@@ -86,8 +88,6 @@ private slots:
     void updatBluetoothDevices();
 
     void updateSongsList();
-
-    void updateVideosList();
 
     void on_playButton_clicked();
 
@@ -114,6 +114,8 @@ private slots:
     void on_volumeUpButton_clicked();
 
     void on_darkThemeButton_clicked();
+
+     void updateVideosList();
 
     void on_goTovideosListButton_clicked();
 
