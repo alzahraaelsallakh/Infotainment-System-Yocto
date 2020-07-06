@@ -250,7 +250,7 @@ It may take many hours to finish the build process
 ```
 $ bitbake core-image-sato
 ```  
-**core-image-sato** is selected as it supports X11 and a GUI server is required. But it has a bug mentioned in the [Known issues](#knownIssues) section in issue no.4     
+**core-image-sato** is selected as it supports X11 and a GUI server is required. But it has a bug mentioned in the [Known issues](#knownIssues) section in issues no.4 and no.5       
 
 2. If the build process was successful, the raspberry pi image will be under ```rpi-build/tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.rpi-sdimg```   
 
@@ -278,6 +278,8 @@ $ sudo dd if=tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.r
 
 **Issue 4:** The halt function in core-image-sato has a bug, where any restart/shutdown/reboot operation interrupts the image every time  
 **Workaround:** Cut the power off temporarly each time 
+
+**Issue 5:** Date and time cannot be set by default in core-image-sato  
 
 ---
 <a name="creatingUI"></a>
