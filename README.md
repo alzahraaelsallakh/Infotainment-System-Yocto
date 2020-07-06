@@ -16,17 +16,20 @@ An in-vehicle infotainment system is a combination of systems that deliver enter
 	2. [ Configuring network settings ](#networkSettings)
 	3. [ Adding VNC server ](#addingVNC)  
 	4. [ Adding Qt ](#addingQt)   
-	5. [ Adding python ](#addingPython)
-	6. [ Adding bluetooth ](#addingBluetooth)  
-	7. [ Adding sound ](#enableSound)
-	8. [ Baking and flashing the image ](#baking) 
-	9. [ Known issues ](#knownIssues)
+	5. [ Adding bluetooth ](#addingBluetooth)  
+	6. [ Adding sound ](#enableSound)
+	7. [ Video setup ](#enableVideo)
+	8. [ Adding debugging tools ](#enableDebugging) 
+	9. [ Baking and flashing the image ](#baking) 
+	10. [ Known issues ](#knownIssues)
 2. [ Creating UI  ](#creatingUI)  
 	1. [ Setting up environment ](#settingEnv)  
 	2. [ Configuring the cross compiling and remote deployment settings on Qt creator ](#qtCreatorDeploy)
 	3. [ Creating Qt project with C++ ](#qtCreator)  
 	4. [ Running multimedia Mp3 and Mp4 ](#multimedia)  
-3. [ References ](#references)
+3. [ Conclusion ](#conclusion)
+4. [ References ](#references)
+
 
 ## General setup  
 **Host machine:** Ubuntu 18.04.4 LTS   
@@ -74,9 +77,10 @@ BBLAYERS ?= " \
 
 7. Edit rpi-build/local.conf and add the following line  
 ```
-LICENSE_FLAGS_WHITELIST_append = " commercial_faad2 commercial_gstreamer1.0-plugins-ugly "
+LICENSE_FLAGS_WHITELIST_append = " commercial_faad2"
 VIRTUAL-RUNTIME_init_manager = "systemd"
 DISTRO_FEATURES_append = " systemd"
+DISTRO_FEATURES_BACKFILL_CONSIDERED = "sysvinit"
 ```   
 8. For developing you might need rootfs extra space, to add extra size as 5G edit rpi-build/local.conf and add the following line 
 ```
@@ -90,6 +94,7 @@ To connect to your target through VNC server, then edit rpi-build/local.conf and
 ```
 IMAGE_INSTALL_append = " x11vnc"
 ```  
+There is an issue with x11vnc setup mentioned in the [Known issues](#knownIssues) section in issue no.1   
 
 <a name="networkSettings"></a>
 ## Configuring network settings (Wifi)  
@@ -191,9 +196,7 @@ BBLAYERS ?= " \
 3.  To support Qt5 on image, edit rpi-build/local.conf and add
 ``` 
 IMAGE_INSTALL_append = " make cmake"
-
 IMAGE_INSTALL_append = " qtbase-tools qtbase qtdeclarative qtimageformats qtmultimedia qtquickcontrols2 qtquickcontrols qtbase-plugins cinematicexperience liberation-fonts"
-
 PACKAGECONFIG_FONTS_append_pn-qtbase = " fontconfig"
 ```  
 4. To enable remote deployment on RPI using Qt platform, you need to add extra network configuration to rpi-build/local.conf  
@@ -201,24 +204,18 @@ PACKAGECONFIG_FONTS_append_pn-qtbase = " fontconfig"
 IMAGE_INSTALL_append = " openssh-sftp-server rsync"
 ```  
 
-<a name="addingPython"></a>
-## Adding python  
-
-1. To be able to run python scripts on your image you need to edit rpi-build/local.conf and add the following for both python3 and python2.7  
-```
-CORE_IMAGE_EXTRA_INSTALL = "python-core python-pip"
-IMAGE_INSTALL_append = " python3-requests python3-pip"
-```
 <a name="addingBluetooth"></a>
 ## Adding bluetooth  
 
-   Edit rpi-build/local.conf to append bluez and to enable UART  
+   Edit rpi-build/local.conf to add required firmwares and bluez
 ```
+MACHINE_FEATURES += " bluetooth"
 CORE_IMAGE_EXTRA_INSTALL = " rsync "
-DISTRO_FEATURES_append = " bluez5 bluetooth linux-firmware-bcm43430"
-IMAGE_INSTALL_append = " bluez5 linux-firmware-bcm43430 i2c-tools hostapd dhcp-server udev-rules-rpi bridge-utils iptables"
-ENABLE_UART = "1" 
+DISTRO_FEATURES_append = " pi-bluetooth bluez5 bluetooth linux-firmware-bcm43430 linux-firmware-brcmfmac43430"
+IMAGE_INSTALL_append = " pi-bluetooth bluez5 bluez5-testtools linux-firmware-bcm43430 i2c-tools hostapd dhcp-server udev-rules-rpi bridge-utils iptables linux-firmware-ralink linux-firmware-rtl8192ce linux-firmware-rtl8192cu linux-firmware-rtl8192su linux-firmware-rpidistro-bcm43430"
+ENABLE_UART = "1"
 ```
+There is an issue in the netwrok setup mentioned in the [Known issues](#knownIssues) section in issue no.3   
 
 <a name="enableSound"></a>
 ## Adding sound 
@@ -226,9 +223,8 @@ ENABLE_UART = "1"
 1. Edit rpi-build/local.conf and add the following to enable GStreamer or mgp123. Fot Qt Media modules GStreamer is required  
 ```
 IMAGE_INSTALL_append = " gstreamer1.0-plugins-good gstreamer1.0-plugins-base gstreamer1.0-plugins-ugly"
-LICENSE_FLAGS_WHITELIST_append = " commercial commercial_mpg123 commercial_gstreamer1.0-plugins-ugly "
-
-PACKAGECONFIG_append_pn-qtmultimedia = " gstreamer alsa"  
+LICENSE_FLAGS_WHITELIST_append = " commercial  commercial_gstreamer1.0-plugins-ugly commercial_gstreamer1.0-plugins-ugly"
+PACKAGECONFIG_append_pn-qtmultimedia = " gstreamer alsa" 
 ```    
 2. Pulseaudio is required to stream audio over bluetooth  
 ```
@@ -236,6 +232,15 @@ DISTRO_FEATURES_append = " pulseaudio"
 IMAGE_INSTALL_append = " pulseaudio pulseaudio-module-dbus-protocol pulseaudio-server pulseaudio-module-bluetooth-discover pulseaudio-module-bluetooth-policy pulseaudio-module-bluez5-device pulseaudio-module-bluez5-discover alsa-utils alsa-plugins"
 ```
 
+<a name="enableVideo"></a>
+## Video setup  
+  
+  For displaying video in proper way you may need to set HDMI_MODE and HDMI_GROUP  in rpi-build/local.conf
+
+<a name="enableDebugging"></a>
+## Adding debugging tools  
+  
+  To enable debugging you will need to add strace in local.conf ``` IMAGE_INSTALL_append = " strace" ```  
 
 <a name="baking"></a>
 ## Baking and flashing the image 
@@ -245,7 +250,7 @@ It may take many hours to finish the build process
 ```
 $ bitbake core-image-sato
 ```  
-**core-image-sato** is selected as it supports X11 and a GUI server is required. But it has a bug mentioned in the [Known issues](#knownIssues) section in issue no.1     
+**core-image-sato** is selected as it supports X11 and a GUI server is required. But it has a bug mentioned in the [Known issues](#knownIssues) section in issue no.4     
 
 2. If the build process was successful, the raspberry pi image will be under ```rpi-build/tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.rpi-sdimg```   
 
@@ -263,14 +268,16 @@ $ sudo dd if=tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.r
 <a name="knownIssues"></a>
 ## Known issues
 
-**Issue 1:** The halt function in core-image-sato has a bug, where any restart/shutdown/reboot operation interrupts the image every time  
-**Workaround:** Cut the power off temporarly each time  
+**Issue 1:** Running Qt5 will disable X11 then it will disable x11vnc   
+**Workaround:** Enable x11vnc and run it on your host machine before you deploy with Qt   
 
-**Issue 2:** Although network setup, the RPI doesn't connect automatically to wifi in the first run after deploying image  
-**Workaround:**  I need to connect my RPI to HDMI and connect to my wifi manually only for the first time  
+**Issue 2:** Although network setup, the RPI doesn't connect automatically to wifi after deploying image  
+**Workaround:**  I need to connect my RPI to HDMI and connect to my wifi manually only for the first time. HDMI is the best choice so far    
 
-**Issue 3:** Running Qt5 may disable X11 then it will disable x11vnc if it's not working  
-**Workaround:** Enable x11vnc and run it on your host machine before you deploy with Qt  
+**Issue 3:** Bluetooth configurations enables bluetooth connections and parinig with any device, but it seems that the bluetooth driver has a bug which fails in attaching serial to bluez stack and leads to block the audio streaming via bluetooth   
+
+**Issue 4:** The halt function in core-image-sato has a bug, where any restart/shutdown/reboot operation interrupts the image every time  
+**Workaround:** Cut the power off temporarly each time 
 
 ---
 <a name="creatingUI"></a>
@@ -345,17 +352,7 @@ $ qtcreator
 	target.path = /home/root/app
 	INSTALLS += target
 ```  
-5. Starting with my main screen gui, building and running on my pc got the following    
-	<p align="center">
-  		<img src="../media/mainScreenGui.gif">
-	</p>  
-6. Building and running on RPI device deploys the application at the specified path which in my case is ```/home/root/app```
-<p align="center">
-  <img src="../media/qtApp.png">
-</p> 
-<p align="center">
-  <img src="../media/qtApp2.png">
-</p> 
+5. Executing system commands may require root permessions on pc such as mount, mkdir, date.. etc. You can launch your application as sudoer to avoid this problem in testing your application ```sudo qtcreator```  
 
 <a name="multimedia"></a>
 ## Running multimedia Mp3 and Mp4
@@ -371,12 +368,35 @@ $ sudo apt-get install qtmultimedia5-dev libqt5multimediawidgets5 libqt5multimed
 6. Qt media moudles rely on GStreamer, make sure that it's enabled as mentioned in [Adding Sound](#enableSound) section   
 
 
+---
+<a name="conclusion"></a>
+# Conclusion  
+
+- Testing application on PC  
+<video width="320" height="240" controls>
+  <source src="../media/InfotainmentSystem.mp4" type="video/mp4">
+</video>
+
+- Running application on RPI
+
+- Applied features:  
+   1. Mp3 Player (.mp3 files)  
+   2. Mp4 Player (.mp4 files)   
+   3. Bluetooth connection (Audio streaming)  
+   4. Settings Panel  (Dark theme and date/time)  
+	
+- Audio streaming via bluetooth and setting time/date are not working on RPI due to previous mentioned issues     
+- The image selection may not be the best for the issues I faced, you can try another with the same configuartions  
+- I tried to go with rpi-basic-image but after building I got the following warning  
+```
+The image 'rpi-basic-image' is deprecated, please use 'core-image-base' instead
+```
 
 ---
 <a name="references"></a>
 # References 
 
-1. [Using Qt Creator to cross-compile and debug Raspberry Pi Qt5 apps ](https://jumpnowtek.com/rpi/Qt-Creator-Setup-for-RPi-cross-development.html) 
-2. [Qt C++ GUI Tutorial for Beginners](https://www.youtube.com/playlist?list=PLS1QulWo1RIZiBcTr5urECberTITj7gjA)  
-3. [Qt Documentation](https://doc.qt.io/qt-5/index.html)  
+1. [Qt Documentation](https://doc.qt.io/qt-5/index.html)  
+2. [Using Qt Creator to cross-compile and debug Raspberry Pi Qt5 apps ](https://jumpnowtek.com/rpi/Qt-Creator-Setup-for-RPi-cross-development.html) 
+3. [Qt C++ GUI Tutorial for Beginners](https://www.youtube.com/playlist?list=PLS1QulWo1RIZiBcTr5urECberTITj7gjA)  
 4. [Intel Edison audio output to bluetooth speaker](https://tl00.wordpress.com/2015/01/28/11/)
