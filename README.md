@@ -354,7 +354,8 @@ $ qtcreator
 	target.path = /home/root/app
 	INSTALLS += target
 ```  
-5. Executing system commands may require root permessions on pc such as mount, mkdir, date.. etc. You can launch your application as sudoer to avoid this problem in testing your application ```sudo qtcreator```  
+5. Executing system commands may require root permessions on pc such as mount, mkdir, date.. etc. You can launch your application as sudoer to avoid this problem in testing your application ```sudo qtcreator```    
+6. In my Qt project there is a configuration file `targetconfiguration.h` to specify on each target the application is going to run because of some commands that don't run on both  
 
 <a name="multimedia"></a>
 ## Running multimedia Mp3 and Mp4
