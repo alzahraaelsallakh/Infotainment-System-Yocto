@@ -307,9 +307,7 @@ void mainScreen::updateFlashStatus()
 
     devicesConnected = GetStdoutFromCommand(listDevicesCMD);
 
-#if TARGET_DEV == DEV_PC
     devicesConnected = extractUsb(devicesConnected);
-#endif
 
     /* New usb is connected */
     if (!devicesConnected.empty() && flashStatus == NO_FLASH_DETECTED)
@@ -912,9 +910,10 @@ void mainScreen::enableBluetooth()
 #endif
 #if TARGET_DEV == DEV_PC
     enableBluetoothCMD = "service bluetooth start && bt-agent --capability=NoInputNoOutput > /dev/null &";
-#endif
     cmd = enableBluetoothCMD.c_str();
     systemStatus = system (cmd);
+#endif
+
 }
 
 
