@@ -1,9 +1,9 @@
 # Infotainment-System-Yocto
 
-This repo if for ITI-Intake 40 graduation project
+This repo is for ITI-Intake 40 graduation project
 
 ## What is a car infotainment system?
-An in-vehicle infotainment system is a combination of systems that deliver entertainment and information to the driver and passengers. They do it using audio and video interfaces, touch screen displays, button panels, voice commands, and many other features. [check more!](https://concisesoftware.com/car-infotainment-system-guide/)
+An in-vehicle infotainment system is a combination of systems that deliver entertainment and information to the driver and passengers. They use audio and video interfaces, touch screen displays, button panels, voice commands, and many other features. [check more!](https://concisesoftware.com/car-infotainment-system-guide/)
 
 <p align="center">
   <img width="700" height="346" src="../media/info-sys-demo.jpg">
@@ -40,7 +40,7 @@ An in-vehicle infotainment system is a combination of systems that deliver enter
 # Building the image using Yocto
 
 <a name="settingEnvYocto"></a>
-## Setting up environment
+## Setting up the environment
 
 1. Download the Poky build system (zeus branch)  
 ```
@@ -82,7 +82,7 @@ VIRTUAL-RUNTIME_init_manager = "systemd"
 DISTRO_FEATURES_append = " systemd"
 DISTRO_FEATURES_BACKFILL_CONSIDERED = "sysvinit"
 ```   
-8. For developing you might need rootfs extra space, to add extra size as 5G edit rpi-build/local.conf and add the following line 
+8. For developing you might need rootfs extra space, to add additional space as 5G edit rpi-build/local.conf and add the following line 
 ```
 IMAGE_ROOTFS_EXTRA_SPACE = "5242880"
 ```
@@ -90,7 +90,7 @@ IMAGE_ROOTFS_EXTRA_SPACE = "5242880"
 <a name="addingVNC"></a>
 ## Adding VNC server
 
-To connect to your target through VNC server, then edit rpi-build/local.conf and add x11vnc to  IMAGE_INSTALL_append variable  
+Connect to your target through VNC server, then edit rpi-build/local.conf and add x11vnc to  IMAGE_INSTALL_append variable  
 ```
 IMAGE_INSTALL_append = " x11vnc"
 ```  
@@ -100,8 +100,8 @@ There is an issue with x11vnc setup mentioned in the [Known issues](#knownIssues
 ## Configuring network settings (Wifi)  
 
 1. Create new custom layer ``` $ bitbake-layers create-layer meta-customInfotainment ``` 
-2. Add the layer to BBLAYERS variable as previuos  
-3. Create new folder for network configuration recipes, **recipes-network** will hold overlaying network files (.bbappend files)  
+2. Add the layer to BBLAYERS variable as previous  
+3. Create a new folder for network configuration recipes, **recipes-network** will hold overlaying network files (.bbappend files)  
 ```
 $ cd meta-customInfotainment/recipes-network
 ```  
@@ -147,7 +147,7 @@ network={
         key_mgmt=NONE
 }
 ```
-5. To enable wifi and set static ip address: /etc/network/interfaces file is required, which is produced by init-ifupdown recipe  
+5. To enable WIFI and set static IP address: /etc/network/interfaces file is required, which is produced by init-ifupdown recipe  
 ``` 
 $ echo 'FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"' >  init-ifupdown_%.bbappend  
 ```
@@ -164,7 +164,7 @@ iface wlan0 inet static
 	wpa-conf /etc/wpa_supplicant.conf  
 iface default inet dhcp
 ```
-6. In case of X11VNC installed, then you need to enable server at booting time: /etc/profile file is required, which is produced by base-files recipe. Also for unkonwn reason your wifi may be blocked by rfkill, then you need to unlbock and enable it again  
+6. In the case of X11VNC installed, you need to enable server at booting time: /etc/profile file is required, produced by base-files recipe. For an unknown reason, your wifi may be blocked by rfkill, so you need to unblock and enable it again  
 ``` 
 $ echo 'FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"' >  init-ifupdown_%.bbappend  
 ```
@@ -205,7 +205,7 @@ IMAGE_INSTALL_append = " openssh-sftp-server rsync"
 ```  
 
 <a name="addingBluetooth"></a>
-## Adding bluetooth  
+## Adding Bluetooth  
 
    Edit rpi-build/local.conf to add required firmwares and bluez
 ```
@@ -215,7 +215,7 @@ DISTRO_FEATURES_append = " pi-bluetooth bluez5 bluetooth linux-firmware-bcm43430
 IMAGE_INSTALL_append = " pi-bluetooth bluez5 bluez5-testtools linux-firmware-bcm43430 i2c-tools hostapd dhcp-server udev-rules-rpi bridge-utils iptables linux-firmware-ralink linux-firmware-rtl8192ce linux-firmware-rtl8192cu linux-firmware-rtl8192su linux-firmware-rpidistro-bcm43430"
 ENABLE_UART = "1"
 ```
-There is an issue in the netwrok setup mentioned in the [Known issues](#knownIssues) section in issue no.3   
+There is an issue in the network setup mentioned in the [Known issues](#knownIssues) section in issue no.3   
 
 <a name="enableSound"></a>
 ## Adding sound 
@@ -226,7 +226,7 @@ IMAGE_INSTALL_append = " gstreamer1.0-plugins-good gstreamer1.0-plugins-base gst
 LICENSE_FLAGS_WHITELIST_append = " commercial  commercial_gstreamer1.0-plugins-ugly commercial_gstreamer1.0-plugins-ugly"
 PACKAGECONFIG_append_pn-qtmultimedia = " gstreamer alsa" 
 ```    
-2. Pulseaudio is required to stream audio over bluetooth  
+2. Pulseaudio is required to stream audio over Bluetooth  
 ```
 DISTRO_FEATURES_append = " pulseaudio"
 IMAGE_INSTALL_append = " pulseaudio pulseaudio-module-dbus-protocol pulseaudio-server pulseaudio-module-bluetooth-discover pulseaudio-module-bluetooth-policy pulseaudio-module-bluez5-device pulseaudio-module-bluez5-discover alsa-utils alsa-plugins"
@@ -235,7 +235,7 @@ IMAGE_INSTALL_append = " pulseaudio pulseaudio-module-dbus-protocol pulseaudio-s
 <a name="enableVideo"></a>
 ## Video setup  
   
-  For displaying video in proper way you may need to set HDMI_MODE and HDMI_GROUP  in rpi-build/local.conf
+  For displaying video in a proper way you may need to set HDMI_MODE and HDMI_GROUP  in rpi-build/local.conf
 
 <a name="enableDebugging"></a>
 ## Adding debugging tools  
@@ -274,10 +274,10 @@ $ sudo dd if=tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.r
 **Issue 2:** Although network setup, the RPI doesn't connect automatically to wifi after deploying image  
 **Workaround:**  I need to connect my RPI to HDMI and connect to my wifi manually only for the first time. HDMI is the best choice so far    
 
-**Issue 3:** Bluetooth configurations enables bluetooth connections and parinig with any device, but it seems that the bluetooth driver has a bug which fails in attaching serial to bluez stack and leads to block the audio streaming via bluetooth   
+**Issue 3:** Bluetooth configurations enable Bluetooth connections and pairing with any device, but it seems that the bluetooth driver has a bug that fails in attaching serial to bluez stack and leads to block the audio streaming via Bluetooth   
 
 **Issue 4:** The halt function in core-image-sato has a bug, where any restart/shutdown/reboot operation interrupts the image every time  
-**Workaround:** Cut the power off temporarly each time 
+**Workaround:** Cut the power off temporarily each time 
 
 **Issue 5:** Date and time cannot be set by default in core-image-sato  
 
@@ -292,7 +292,7 @@ $ sudo dd if=tmp/deploy/images/raspberrypi3-64/core-image-sato-raspberrypi3-64.r
 ```
 $ sudo apt-get install qtcreator  
 ```
-2. Install Qt5 tool chain for cross compilation. The installation path may differ, just check your terminal output  
+2. Install Qt5 toolchain for cross compilation. The installation path may differ, just check your terminal output  
 ```
 $ bitbake meta-toolchain-qt5  
 $ cd tmp/deploy/sdk
@@ -302,7 +302,7 @@ $ ./poky-glibc-x86_64-meta-toolchain-qt5-aarch64-raspberrypi3-64-toolchain-3.0.2
 <a name="qtCreatorDeploy"></a>
 ## Configuring the cross compiling and remote deployment settings on Qt creator
 
-1. Frist you need to source the sdk tool chain. The source path may differ depending on the output of your SDK installation  
+1. First, you need to source the SDK toolchain. The source path may differ depending on the output of your SDK installation  
 ```
 $ source rpi-build/tmp/deploy/sdk/yes/environment-setup-aarch64-poky-linux  
 ```  
@@ -349,12 +349,12 @@ $ qtcreator
 1. Create new project as **Application** -> Qt Widgets Application  
 2. When it comes to **Kit Selection** choose your pc and your device, if your pc is not listed add it from devices window  
 3. Following the steps will create main.cpp which is the whole project main function, source/header and ui files for your main class and .pro file which configure your project  
-4. The pro file is updated automatically on each file creation/deletion. You will only need to add the remote executable path where your application is going to be deployed in your image as  
+4. The pro file is updated automatically on each file creation/deletion. You will only need to add the remote executable path where your application will be deployed in your image as  
 ```
 	target.path = /home/root/app
 	INSTALLS += target
 ```  
-5. Executing system commands may require root permessions on pc such as mount, mkdir, date.. etc. You can launch your application as sudoer to avoid this problem in testing your application ```sudo qtcreator```    
+5. Executing system commands may require root permissions on pc such as mount, mkdir, date.. etc. You can launch your application as sudoer to avoid this problem in testing your application ```sudo qtcreator```    
 6. In my Qt project there is a configuration file `targetconfiguration.h` to specify on each target the application is going to run because of some commands that don't run on both  
 
 <a name="multimedia"></a>
@@ -368,7 +368,7 @@ $ sudo apt-get install qtmultimedia5-dev libqt5multimediawidgets5 libqt5multimed
 ```  
 4. Make sure that qmake selected in Qt version for your PC is Qt5 not Qt4  ``` /usr/lib/qt5/bin/qmake ```  
 5. Clean your project, add ```QT += multimedia multimediawidgets``` to your .pro file and run qmake again (right click on your project)   
-6. Qt media moudles rely on GStreamer, make sure that it's enabled as mentioned in [Adding Sound](#enableSound) section   
+6. Qt media modules rely on GStreamer, make sure that it's enabled as mentioned in [Adding Sound](#enableSound) section   
 
 
 ---
@@ -381,8 +381,8 @@ $ sudo apt-get install qtmultimedia5-dev libqt5multimediawidgets5 libqt5multimed
    3. Bluetooth connection (Audio streaming)  
    4. Settings Panel  (Dark theme and date/time)  
 	
-- Audio streaming via bluetooth and setting time/date are not working on RPI due to previous mentioned issues     
-- The image selection may not be the best for the issues I faced, you can try another with the same configuartions  
+- Audio streaming via Bluetooth and setting time/date are not working on RPI due to previously mentioned issues     
+- The image selection may not be the best for the issues I faced, you can try another with the same configurations  
 - I tried to go with rpi-basic-image but after building I got the following warning  
 ```
 The image 'rpi-basic-image' is deprecated, please use 'core-image-base' instead
@@ -395,4 +395,4 @@ The image 'rpi-basic-image' is deprecated, please use 'core-image-base' instead
 1. [Qt Documentation](https://doc.qt.io/qt-5/index.html)  
 2. [Using Qt Creator to cross-compile and debug Raspberry Pi Qt5 apps ](https://jumpnowtek.com/rpi/Qt-Creator-Setup-for-RPi-cross-development.html) 
 3. [Qt C++ GUI Tutorial for Beginners](https://www.youtube.com/playlist?list=PLS1QulWo1RIZiBcTr5urECberTITj7gjA)  
-4. [Intel Edison audio output to bluetooth speaker](https://tl00.wordpress.com/2015/01/28/11/)
+4. [Intel Edison audio output to Bluetooth speaker](https://tl00.wordpress.com/2015/01/28/11/)
