@@ -372,13 +372,6 @@ $ sudo apt-get install qtmultimedia5-dev libqt5multimediawidgets5 libqt5multimed
 <a name="conclusion"></a>
 # Conclusion  
 
-- Testing application on PC  
-<video width="320" height="240" controls>
-  <source src="../media/InfotainmentSystem.mp4" type="video/mp4">
-</video>
-
-- Running application on RPI
-
 - Applied features:  
    1. Mp3 Player (.mp3 files)  
    2. Mp4 Player (.mp4 files)   
