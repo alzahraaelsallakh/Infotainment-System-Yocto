@@ -375,6 +375,10 @@ $ sudo apt-get install qtmultimedia5-dev libqt5multimediawidgets5 libqt5multimed
 <a name="conclusion"></a>
 # Conclusion  
 
+- A simple demo of the system running on both Ubuntu and Raspberry Pi:    
+
+[![Infotainment System (Yocto & Qt)](https://github.com/alzahraaelsallakh/Infotainment-System-Yocto/blob/media/demoThumb.PNG)](https://www.youtube.com/watch?v=YtsgnpMfhsA&t=5s "Infotainment System (Yocto & Qt)")
+
 - Applied features:  
    1. Mp3 Player (.mp3 files)  
    2. Mp4 Player (.mp4 files)   
