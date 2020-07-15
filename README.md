@@ -27,7 +27,7 @@ An in-vehicle infotainment system is a combination of systems that deliver enter
 	2. [ Configuring the cross compiling and remote deployment settings on Qt creator ](#qtCreatorDeploy)
 	3. [ Creating Qt project with C++ ](#qtCreator)  
 	4. [ Running multimedia Mp3 and Mp4 ](#multimedia)  
-3. [ Conclusion ](#conclusion)
+3. [ Conclusion & Demo ](#conclusion)
 4. [ References ](#references)
 
 
@@ -373,7 +373,7 @@ $ sudo apt-get install qtmultimedia5-dev libqt5multimediawidgets5 libqt5multimed
 
 ---
 <a name="conclusion"></a>
-# Conclusion  
+# Conclusion & Demo   
 
 - A simple demo of the system running on both Ubuntu and Raspberry Pi:    
 
